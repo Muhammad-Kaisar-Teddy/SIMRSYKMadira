@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin - RSU YK Madira</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(117deg, #FFF 0%, #E3B2D3 49.53%, #55ACBF 99.06%);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex text-gray-800">
+
+  <!-- Sidebar -->
+  <aside class="w-30 bg-[linear-gradient(180deg,#FFF_0%,rgba(227,178,211,0.50)_50%,rgba(85,172,191,0.50)_100%)] backdrop-blur-md shadow-lg flex flex-col items-center py-6 space-y-6">
+    <img src="img/logo-rsu.png" alt="Logo" class="w-16 h-16 mb-4" />
+    <nav class="flex flex-col space-y-6 text-sm">
+      <a href="booking.html" class="flex flex-col items-center hover:text-[#4C7990]"><img src="icons/queue.png" class="w-6 h-6">Antrean</a>
+      <a href="pasien.html" class="flex flex-col items-center hover:text-[#4C7990]"><img src="icons/search.png" class="w-6 h-6">Data Pasien</a>
+      <a href="rekam-medis.html" class="flex flex-col items-center hover:text-[#4C7990]"><img src="icons/add.png" class="w-6 h-6">Rekam Medis</a>
+      <a href="fasilitas-tarif.html" class="flex flex-col items-center hover:text-[#4C7990]"><img src="icons/report.png" class="w-6 h-6">Fasilitas</a>
+      <a href="#" class="flex flex-col items-center hover:text-[#4C7990]"><img src="icons/bell.png" class="w-6 h-6">Notifikasi</a>
+      <a href="#" class="flex flex-col items-center hover:text-[#4C7990]"><img src="icons/print.png" class="w-6 h-6">Laporan</a>
+    </nav>
+    <div class="mt-auto space-y-4">
+      <a href="#" class="flex flex-col items-center hover:text-[#4C7990]"><img src="icons/user.png" class="w-6 h-6">Profil</a>
+      <button onclick="logout()" class="flex flex-col items-center hover:text-red-600 text-gray-600 cursor-pointer">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col">
+    
+    <!-- Navbar Menu -->
+    <div class="sticky top-0 z-40 px-6 pt-4">
+      <div class="flex justify-center gap-5 bg-white/20 backdrop-blur-md rounded-full py-3 shadow-sm">
+        <a href="dashboard-admin.html" class="px-6 py-2 rounded-full bg-[#4C7990] text-white shadow-lg border border-[#55ACBF]">Dashboard</a>
+        <a href="pasien.html" class="px-6 py-2 rounded-full bg-white text-[#1F3D47] border border-[#55ACBF] hover:bg-[#55ACBF] hover:text-white transition-all">Pasien</a>
+        <a href="booking.html" class="px-6 py-2 rounded-full bg-white text-[#1F3D47] border border-[#55ACBF] hover:bg-[#55ACBF] hover:text-white transition-all">Appointment</a>
+        <a href="fasilitas-tarif.html" class="px-6 py-2 rounded-full bg-white text-[#1F3D47] border border-[#55ACBF] hover:bg-[#55ACBF] hover:text-white transition-all">Fasilitas</a>
+        <a href="#" class="px-6 py-2 rounded-full bg-white text-[#1F3D47] border border-[#55ACBF] hover:bg-[#55ACBF] hover:text-white transition-all">Obat/Farmasi</a>
+        <a href="#" class="px-6 py-2 rounded-full bg-white text-[#1F3D47] border border-[#55ACBF] hover:bg-[#55ACBF] hover:text-white transition-all">Inventory</a>
+        <a href="#" class="px-6 py-2 rounded-full bg-white text-[#1F3D47] border border-[#55ACBF] hover:bg-[#55ACBF] hover:text-white transition-all">Analisis</a>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="p-6 space-y-8">
+
+      <!-- RINGKASAN STATISTIKA -->
+      <section class="bg-white/65 backdrop-blur-md rounded-[24px] shadow-md px-6 py-5">
+        <h2 class="text-[20px] font-extrabold text-[#1F3D47] mb-5">Ringkasan Statistikal</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Total Pasien -->
+          <div class="bg-[#79B5C6] rounded-[18px] p-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-white">Total Pasien</h3>
+              <!-- expand icon -->
+              <button class="rounded bg-white/40 p-1" aria-label="Expand">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M21 8V3h-5M3 16v5h5M16 21h5v-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="mt-3 bg-white/90 rounded-[14px] p-4 space-y-3">
+              <label class="inline-flex items-center gap-2 text-sm text-[#1F3D47]">
+                <span>Tanggal</span>
+                <input id="fDate" type="date" class="px-2 py-1 rounded border border-gray-300 text-sm">
+                <button id="btnDateToday" class="ml-1 p-1 rounded hover:bg-gray-100" title="Hari ini">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M8 7V3m8 4V3M3 11h18M7 21h10a2 2 0 0 0 2-2v-8H5v8a2 2 0 0 0 2 2z" stroke="currentColor" stroke-width="2"/></svg>
+                </button>
+              </label>
+              <div class="flex justify-between bg-white rounded-[10px] px-3 py-2">
+                <span class="text-sm flex items-center gap-2"><span>🧑‍🦰</span>Dewasa:</span>
+                <span id="dewasa-total" class="font-bold">0</span>
+              </div>
+              <div class="flex justify-between bg-white rounded-[10px] px-3 py-2">
+                <span class="text-sm flex items-center gap-2"><span>🧒</span>Anak-anak:</span>
+                <span id="anak-total" class="font-bold">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kunjungan Harian -->
+          <div class="bg-[#79B5C6] rounded-[18px] p-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-white">Kunjungan Harian</h3>
+              <button class="rounded bg-white/40 p-1" aria-label="Expand">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M21 8V3h-5M3 16v5h5M16 21h5v-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="mt-3 bg-white/90 rounded-[14px] p-4 space-y-3">
+              <label class="inline-flex items-center gap-2 text-sm text-[#1F3D47]">
+                <span>Tanggal</span>
+                <input id="fVisitDate" type="date" class="px-2 py-1 rounded border border-gray-300 text-sm">
+              </label>
+              <div class="flex justify-between bg-white rounded-[10px] px-3 py-2">
+                <span class="text-sm">IGD/UGD:</span>
+                <span id="igd-total" class="font-bold">0</span>
+              </div>
+              <div class="flex justify-between bg-white rounded-[10px] px-3 py-2">
+                <span class="text-sm">Poliklinik:</span>
+                <span id="poli-total" class="font-bold">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kapasitas Ruangan -->
+          <div class="bg-[#79B5C6] rounded-[18px] p-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-white">Kapasitas Ruangan</h3>
+              <button class="rounded bg-white/40 p-1" aria-label="Expand">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none"><path d="M8 3H3v5M21 8V3h-5M3 16v5h5M16 21h5v-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="mt-3 bg-white/90 rounded-[14px] p-4 space-y-3">
+              <label class="inline-flex items-center gap-2 text-sm text-[#1F3D47]">
+                <span>Ruangan</span>
+                <select id="fRoom" class="px-2 py-1 rounded border border-gray-300 text-sm">
+                  <option value="all">Semua</option>
+                  <option value="Dewasa">Dewasa</option>
+                  <option value="Anak-anak">Anak-anak</option>
+                </select>
+              </label>
+              <div class="flex justify-between bg-white rounded-[10px] px-3 py-2">
+                <span class="text-sm">Dewasa:</span>
+                <span id="dewasa-room" class="font-bold">0</span>
+              </div>
+              <div class="flex justify-between bg-white rounded-[10px] px-3 py-2">
+                <span class="text-sm">Anak-anak:</span>
+                <span id="anak-room" class="font-bold">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== KALENDER SLOT JADWAL DOKTER (Card Biru Besar) ====== -->
+      <section class="rounded-[24px] shadow-md overflow-hidden">
+        <div id="doctor-calendar-card" class="rounded-[24px] bg-[#4C7990] text-white shadow-lg">
+          <!-- Header & Controls -->
+          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between p-4">
+            <div class="flex items-center gap-3">
+              <h3 id="cal-title" class="text-xl font-semibold tracking-tight">Kalender Jadwal Dokter</h3>
+              <span id="cal-range-label" class="text-white/80 text-sm"></span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="inline-flex rounded-xl overflow-hidden shadow">
+                <button id="btn-prev" class="px-3 py-2 bg-white/10 hover:bg-white/20">‹</button>
+                <button id="btn-today" class="px-3 py-2 bg-white/10 hover:bg-white/20">Hari ini</button>
+                <button id="btn-next" class="px-3 py-2 bg-white/10 hover:bg-white/20">›</button>
+              </div>
+              <div class="inline-flex rounded-xl overflow-hidden shadow">
+                <button id="btn-view-month" class="px-3 py-2 bg-white text-[#4C7990] font-medium">Bulan</button>
+                <button id="btn-view-week" class="px-3 py-2 bg-white/10 hover:bg-white/20">Minggu</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="px-4 pb-3 flex items-center gap-3 text-sm">
+            <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-green-400 inline-block"></span>Tersedia</span>
+            <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-red-400 inline-block"></span>Penuh</span>
+            <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-gray-400 inline-block"></span>Tidak ada slot</span>
+          </div>
+
+          <!-- Kalender -->
+          <div class="bg-white text-gray-800 rounded-b-[24px]">
+            <!-- Header nama hari -->
+            <div class="grid grid-cols-7 text-xs font-semibold uppercase tracking-wide border-b">
+              <div class="p-2 text-center">Sen</div>
+              <div class="p-2 text-center">Sel</div>
+              <div class="p-2 text-center">Rab</div>
+              <div class="p-2 text-center">Kam</div>
+              <div class="p-2 text-center">Jum</div>
+              <div class="p-2 text-center">Sab</div>
+              <div class="p-2 text-center">Min</div>
+            </div>
+            <!-- Grid tanggal -->
+            <div id="cal-grid" class="grid grid-cols-1 sm:grid-cols-7 auto-rows-fr gap-px bg-gray-200">
+              <!-- Diisi via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ====== /KALENDER ====== -->
+
+      <!-- ROW BAWAH -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Tren Kesehatan -->
+        <div class="bg-white/70 backdrop-blur-md rounded-[20px] p-5 shadow-md">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-extrabold text-[#1F3D47]">Tren Kesehatan</h3>
+            <div class="flex items-center gap-2">
+              <select id="fTrend" class="px-2 py-1 rounded border border-gray-300 text-sm">
+                <option value="Bulan">Bulan</option>
+                <option value="Mingguan">Mingguan</option>
+                <option value="Harian">Harian</option>
+              </select>
+              <button class="p-1 rounded hover:bg-gray-100" title="Cari">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="m21 21-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-[#1F3D47]">
+                  <th class="text-left py-2">Penyakit</th>
+                  <th class="text-left py-2">Karakteristik</th>
+                  <th class="text-right py-2">Pasien</th>
+                  <th class="text-right py-2">Sembuh</th>
+                </tr>
+              </thead>
+              <tbody id="tren-table" class="align-top"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Jadwal Dokter (list ringkas) -->
+        <div class="bg-white/70 backdrop-blur-md rounded-[20px] p-5 shadow-md">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-extrabold text-[#1F3D47]">Jadwal Dokter</h3>
+            <div class="flex items-center gap-2">
+              <select id="fWeekStart" class="px-2 py-1 rounded border border-gray-300 text-sm">
+                <!-- diisi JS: label Minggu + tanggal -->
+              </select>
+              <button class="p-1 rounded hover:bg-gray-100" title="Cari">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="m21 21-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Strip hari minggu berjalan -->
+          <div id="week-strip" class="flex gap-2 mb-4"></div>
+
+          <!-- Slot jadwal sederhana -->
+          <ul id="jadwal-dokter" class="space-y-2 text-sm"></ul>
+        </div>
+
+        <!-- Jadwal Konferensi -->
+        <div class="bg-white/70 backdrop-blur-md rounded-[20px] p-5 shadow-md">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-extrabold text-[#1F3D47]">Jadwal Konferensi</h3>
+            <div class="flex items-center gap-2">
+              <input id="fConfDate" type="date" class="px-2 py-1 rounded border border-gray-300 text-sm">
+              <button class="p-1 rounded hover:bg-gray-100" title="Cari">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="m21 21-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+            </div>
+          </div>
+          <ul id="jadwal-konferensi" class="space-y-3 text-sm"></ul>
+        </div>
+      </div>
+
+  </main>
+
+  <!-- ====== Script bawaan dashboard (TETAP) ====== -->
+  <script>
+  const apiBase = 'http://localhost/SIMRSYKMadira/api/dashboard_summary.php';
+
+  function fmtDate(d){
+    const pad=n=>String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+  function mondayOf(d){
+    const x = new Date(d);
+    const day = x.getDay(); // 0..6
+    const diff = (day===0 ? -6 : 1 - day);
+    x.setDate(x.getDate()+diff);
+    return x;
+  }
+  function makeWeekOptions(){
+    const sel = document.getElementById('fWeekStart');
+    sel.innerHTML = '';
+    const today = new Date();
+    const startThis = mondayOf(today);
+    for(let i=-2;i<=2;i++){
+      const d = new Date(startThis);
+      d.setDate(d.getDate()+7*i);
+      const opt = document.createElement('option');
+      opt.value = fmtDate(d);
+      const end = new Date(d); end.setDate(end.getDate()+6);
+      opt.textContent = `Minggu ${d.getDate()}–${end.getDate()} ${d.toLocaleString('id-ID',{month:'short'})}`;
+      if(i===0) opt.selected = true;
+      sel.appendChild(opt);
+    }
+  }
+  function renderWeekStrip(weekStart){
+    const strip = document.getElementById('week-strip');
+    strip.innerHTML = '';
+    const start = new Date(weekStart);
+    for(let i=0;i<7;i++){
+      const d = new Date(start);
+      d.setDate(start.getDate()+i);
+      const label = d.toLocaleDateString('id-ID',{weekday:'short'});
+      const btn = document.createElement('button');
+      btn.className = 'px-3 py-1 rounded-full border text-sm';
+      btn.textContent = d.getDate();
+      btn.title = label;
+      btn.dataset.date = fmtDate(d);
+      btn.addEventListener('click',()=>highlightDay(btn));
+      strip.appendChild(btn);
+    }
+    // default highlight hari ini jika di dalam rentang
+    [...strip.children].forEach(b=>{
+      if(b.dataset.date === fmtDate(new Date())) highlightDay(b);
+    });
+  }
+  function highlightDay(btn){
+    [...btn.parentElement.children].forEach(b=> b.classList.remove('bg-green-500','text-white','border-green-500'));
+    btn.classList.add('bg-green-500','text-white','border-green-500');
+  }
+
+  async function loadDashboard(){
+    // ambil filter
+    const date       = document.getElementById('fDate')?.value || fmtDate(new Date());
+    document.getElementById('fVisitDate').value = date;
+    const room       = document.getElementById('fRoom')?.value || 'all';
+    const trend      = document.getElementById('fTrend')?.value || 'Bulan';
+    const weekStart  = document.getElementById('fWeekStart')?.value || fmtDate(mondayOf(new Date()));
+    const confDate   = document.getElementById('fConfDate')?.value || fmtDate(new Date());
+
+    const url = `${apiBase}?date=${encodeURIComponent(confDate)}&room=${encodeURIComponent(room)}&trend=${encodeURIComponent(trend)}&week_start=${encodeURIComponent(weekStart)}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Total Pasien
+    document.getElementById('dewasa-total').textContent = data.total_pasien.dewasa;
+    document.getElementById('anak-total').textContent   = data.total_pasien.anak;
+
+    // Kunjungan Harian (pakai fVisitDate)
+    document.getElementById('igd-total').textContent  = data.kunjungan['IGD/UGD'] || 0;
+    document.getElementById('poli-total').textContent = data.kunjungan['Poliklinik'] || 0;
+
+    // Kapasitas
+    document.getElementById('dewasa-room').textContent = data.kapasitas.dewasa ?? 0;
+    document.getElementById('anak-room').textContent   = data.kapasitas.anak ?? 0;
+
+    // Tren Kesehatan + badge warna
+    const tbody = document.getElementById('tren-table');
+    tbody.innerHTML = '';
+    data.tren.forEach(r=>{
+      let badgeClass = '';
+      if (r.karakteristik?.toLowerCase() === 'infeksius') {
+        badgeClass = 'bg-red-100 text-red-700 text-align-center';
+      } else if (r.karakteristik?.toLowerCase() === 'non-infeksius') {
+        badgeClass = 'bg-green-100 text-green-700 text-align-center';
+      } else {
+        badgeClass = 'bg-gray-100 text-gray-700 text-align-center';
+      }
+      const badge = `<span class="px-2 py-0.5 rounded-full text-xs ${badgeClass}">${r.karakteristik}</span>`;
+      
+      tbody.insertAdjacentHTML('beforeend', `
+        <tr class="border-t">
+          <td class="py-2">${r.penyakit}</td>
+          <td class="py-2">${badge}</td>
+          <td class="py-2 text-right">${r.pasien}</td>
+          <td class="py-2 text-right">${r.sembuh}</td>
+        </tr>
+      `);
+    });
+
+    // Jadwal Dokter (list) + refresh strip
+    renderWeekStrip(weekStart);
+    const jd = document.getElementById('jadwal-dokter');
+    jd.innerHTML = '';
+    data.jadwal_dokter.forEach(j=>{
+      jd.insertAdjacentHTML('beforeend', `
+        <li class="flex items-center justify-between bg-white/80 rounded-lg px-3 py-2">
+          <span>${j.nama_dokter} - ${j.spesialis}</span>
+          <span class="font-medium"><span class="text-[#4C7990]">${j.tanggal}</span> • <span class="text-red-600">${j.mulai}</span></span>
+        </li>
+      `);
+    });
+
+    // Konferensi: tanggal biru, jam merah (sesuai desain)
+    const kc = document.getElementById('jadwal-konferensi');
+    kc.innerHTML = '';
+    data.konferensi.forEach(k=>{
+      kc.insertAdjacentHTML('beforeend', `
+        <li class="flex items-center justify-between border-b pb-2">
+          <span>${k.judul}</span>
+          <span><span class="text-[#4C7990]">${k.tanggal}</span> • <span class="text-red-600">${k.jam}</span></span>
+        </li>
+      `);
+    });
+
+    // >>> Sinkronkan Kalender Biru dengan minggu yang dipilih <<<
+    const start = new Date(weekStart);
+    const end = new Date(start); end.setDate(end.getDate()+6);
+    document.dispatchEvent(new CustomEvent('calendar:refetch', {
+      detail: { start: fmtDate(start), end: fmtDate(end) }
+    }));
+  }
+
+  // init
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const today = fmtDate(new Date());
+    document.getElementById('fDate').value = today;
+    document.getElementById('fVisitDate').value = today;
+    document.getElementById('fConfDate').value = today;
+    makeWeekOptions();
+    loadDashboard();
+
+    // listeners
+    ['fDate','fVisitDate','fRoom','fTrend','fWeekStart','fConfDate'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.addEventListener('change', loadDashboard);
+    });
+    document.getElementById('btnDateToday').addEventListener('click', ()=>{
+      const t = fmtDate(new Date());
+      document.getElementById('fDate').value = t;
+      document.getElementById('fVisitDate').value = t;
+      document.getElementById('fConfDate').value = t;
+      loadDashboard();
+    });
+  });
+  </script>
+
+  <!-- ====== Script Kalender Slot Jadwal Dokter (BARU) ====== -->
+  <script>
+  (() => {
+    // ======= Konfigurasi dasar =======
+    const API_URL = '/api/doctor_schedules'; // ganti kalau endpoint lo beda
+    const state = {
+      view: window.innerWidth < 640 ? 'week' : 'month', // mobile default week
+      current: new Date(), // tanggal referensi untuk view
+      dataByDate: new Map(), // 'YYYY-MM-DD' -> array of slots
+      loading: false,
+      lastRange: { start: null, end: null }
+    };
+
+    // ======= Util tanggal =======
+    const pad = n => (n < 10 ? '0' + n : '' + n);
+    const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const clone = d => new Date(d.getTime());
+    const startOfWeek = d => {
+      const c = clone(d);
+      const day = c.getDay(); // 0=Min ... 6=Sab
+      const diff = (day === 0 ? -6 : (1 - day)); // ke Senin
+      c.setDate(c.getDate() + diff);
+      c.setHours(0,0,0,0);
+      return c;
+    };
+    const endOfWeek = d => {
+      const s = startOfWeek(d);
+      s.setDate(s.getDate() + 6);
+      s.setHours(23,59,59,999);
+      return s;
+    };
+    const startOfMonthGrid = d => startOfWeek(new Date(d.getFullYear(), d.getMonth(), 1));
+    const endOfMonthGrid = d => endOfWeek(new Date(d.getFullYear(), d.getMonth()+1, 0));
+    const formatMonthTitle = d => d.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+    const formatRangeLabel = (start, end) => {
+      const opts = { day: '2-digit', month: 'short' };
+      const s = start.toLocaleDateString('id-ID', opts);
+      const e = end.toLocaleDateString('id-ID', { ...opts, year: start.getFullYear() !== end.getFullYear() ? 'numeric' : undefined });
+      return `${s} – ${e}`;
+    };
+
+    // ======= DOM refs =======
+    const elTitle = document.getElementById('cal-title');
+    const elRange = document.getElementById('cal-range-label');
+    const elGrid  = document.getElementById('cal-grid');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnToday= document.getElementById('btn-today');
+    const btnMonth= document.getElementById('btn-view-month');
+    const btnWeek = document.getElementById('btn-view-week');
+
+    // ======= Fetch & normalize =======
+    async function fetchSchedules(start, end) {
+      state.loading = true;
+      renderSkeleton(start, end);
+      try {
+        const url = new URL(API_URL, window.location.origin);
+        if (start && end) {
+          url.searchParams.set('start', ymd(start));
+          url.searchParams.set('end', ymd(end));
+        }
+        const res = await fetch(url.toString(), {
+          headers: { 'Accept': 'application/json' },
+          credentials: 'same-origin'
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const list = await res.json();
+        // Ekspektasi:
+        // [
+        //   { doctor_name: "Dr. A", date: "2025-08-08", start_time: "09:00", end_time: "09:30", status: "available" }
+        // ]
+        state.dataByDate = new Map();
+        for (const item of list) {
+          const key = item.date; // YYYY-MM-DD
+          if (!state.dataByDate.has(key)) state.dataByDate.set(key, []);
+          state.dataByDate.get(key).push({
+            doctor: item.doctor_name || item.doctor || 'Dokter',
+            start: item.start_time || item.time || '',
+            end: item.end_time || '',
+            status: (item.status || '').toLowerCase()
+          });
+        }
+      } catch (e) {
+        console.error('Gagal ambil jadwal dokter:', e);
+        elRange.textContent = 'Gagal memuat data. Coba lagi.';
+      } finally {
+        state.loading = false;
+        render(start, end);
+      }
+    }
+
+    // ======= Render =======
+    function renderSkeleton(start, end) {
+      const days = enumerateDays(start, end);
+      elGrid.innerHTML = days.map(() => `
+        <div class="bg-white p-2 min-h-[110px] sm:min-h-[130px]">
+          <div class="h-4 w-10 rounded bg-gray-200 mb-2 animate-pulse"></div>
+          <div class="space-y-2">
+            <div class="h-6 rounded bg-gray-100 animate-pulse"></div>
+            <div class="h-6 rounded bg-gray-100 animate-pulse"></div>
+          </div>
+        </div>
+      `).join('');
+      setHeader(start, end);
+      styleViewButtons();
+    }
+
+    function render(start, end) {
+      const days = enumerateDays(start, end);
+      elGrid.innerHTML = days.map(d => renderCell(d)).join('');
+      setHeader(start, end);
+      styleViewButtons();
+    }
+
+    function setHeader(start, end) {
+      if (state.view === 'month') {
+        elTitle.textContent = `Kalender Jadwal Dokter – ${formatMonthTitle(state.current)}`;
+      } else {
+        const labelMonth = state.current.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+        elTitle.textContent = `Kalender Jadwal Dokter – ${labelMonth}`;
+      }
+      elRange.textContent = formatRangeLabel(start, end);
+    }
+
+    function styleViewButtons() {
+      const active = 'bg-white text-[#4C7990] font-semibold';
+      const inactive = 'bg-white/10 hover:bg-white/20 text-white';
+      btnMonth.className = `px-3 py-2 ${state.view==='month'?active:inactive}`;
+      btnWeek.className  = `px-3 py-2 ${state.view==='week'?active:inactive}`;
+    }
+
+    function enumerateDays(start, end) {
+      const arr = [];
+      const c = new Date(start);
+      while (c <= end) {
+        arr.push(new Date(c));
+        c.setDate(c.getDate() + 1);
+      }
+      return arr;
+    }
+
+    function renderCell(dateObj) {
+      const isOtherMonth = (state.view === 'month') && (dateObj.getMonth() !== state.current.getMonth());
+      const isToday = ymd(dateObj) === ymd(new Date());
+      const key = ymd(dateObj);
+      const slots = state.dataByDate.get(key) || [];
+
+      let hasAvail = slots.some(s => s.status === 'available' || s.status === 'tersedia');
+      let hasFull  = slots.some(s => s.status === 'full' || s.status === 'penuh' || s.status === 'booked');
+
+      const dayHeaderClasses = [
+        "flex items-center justify-between mb-2",
+        isOtherMonth ? "text-gray-400" : "text-gray-700"
+      ].join(' ');
+
+      const dayBadge = `
+        <div class="${dayHeaderClasses}">
+          <span class="text-sm font-semibold">${dateObj.getDate()}</span>
+          ${isToday ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-[#4C7990] text-white">Hari ini</span>' : ''}
+        </div>`;
+
+      const slotChips = slots.length
+        ? slots.slice(0, 4).map(s => renderSlotChip(s)).join('')
+        : `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600 border border-gray-200">Tidak ada slot</span>`;
+
+      const moreCount = Math.max(0, slots.length - 4);
+      const moreTag = moreCount > 0
+        ? `<span class="inline-flex items-center px-2 py-1 rounded-full text-[11px] bg-gray-50 text-gray-600 border border-gray-200">+${moreCount} lagi</span>`
+        : '';
+
+      return `
+        <div class="bg-white p-2 min-h-[110px] sm:min-h-[130px] border border-gray-100">
+          ${dayBadge}
+          <div class="flex flex-wrap gap-1.5">
+            ${slotChips}
+            ${moreTag}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSlotChip(s) {
+      let base = "inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] border";
+      let color;
+      const st = (s.status || '').toLowerCase();
+      if (st === 'available' || st === 'tersedia') {
+        color = "bg-green-100 text-green-800 border-green-300";
+      } else if (st === 'full' || st === 'penuh' || st === 'booked') {
+        color = "bg-red-100 text-red-800 border-red-300";
+      } else {
+        color = "bg-gray-100 text-gray-700 border-gray-300";
+      }
+      const time = s.start && s.end ? `${s.start}–${s.end}` : (s.start || '');
+      return `<span class="${base} ${color}" title="${s.doctor} ${time}">
+        <span class="truncate max-w-[98px]">${s.doctor}</span>
+        ${time ? `<span class="opacity-80">•</span><span>${time}</span>` : ''}
+      </span>`;
+    }
+
+    // ======= Navigasi =======
+    function getCurrentRange() {
+      if (state.view === 'month') {
+        return { start: startOfMonthGrid(state.current), end: endOfMonthGrid(state.current) };
+      } else {
+        return { start: startOfWeek(state.current), end: endOfWeek(state.current) };
+      }
+    }
+
+    function goPrev() {
+      if (state.view === 'month') {
+        state.current.setMonth(state.current.getMonth() - 1);
+      } else {
+        state.current.setDate(state.current.getDate() - 7);
+      }
+      bootOrRefresh();
+    }
+    function goNext() {
+      if (state.view === 'month') {
+        state.current.setMonth(state.current.getMonth() + 1);
+      } else {
+        state.current.setDate(state.current.getDate() + 7);
+      }
+      bootOrRefresh();
+    }
+    function goToday() {
+      state.current = new Date();
+      bootOrRefresh();
+    }
+    function setView(v) {
+      state.view = v;
+      bootOrRefresh(true);
+    }
+
+    // ======= Boot / Refresh =======
+    function bootOrRefresh(forceFetch = false) {
+      const { start, end } = getCurrentRange();
+      const sameRange = state.lastRange.start && state.lastRange.end
+        && ymd(state.lastRange.start) === ymd(start) && ymd(state.lastRange.end) === ymd(end);
+
+      if (!sameRange || forceFetch) {
+        state.lastRange = { start, end };
+        fetchSchedules(start, end);
+      } else {
+        render(start, end);
+      }
+    }
+
+    // ======= Events =======
+    btnPrev.addEventListener('click', goPrev);
+    btnNext.addEventListener('click', goNext);
+    btnToday.addEventListener('click', goToday);
+    btnMonth.addEventListener('click', () => setView('month'));
+    btnWeek.addEventListener('click',  () => setView('week'));
+
+    // Integrasi dengan filter luar (dipanggil dari loadDashboard)
+    document.addEventListener('calendar:refetch', (e) => {
+      const d = e.detail || {};
+      const start = d.start ? new Date(d.start) : getCurrentRange().start;
+      const end   = d.end   ? new Date(d.end)   : getCurrentRange().end;
+      state.lastRange = { start, end }; // paksa fetch
+      fetchSchedules(start, end);
+    });
+
+    // Init
+    styleViewButtons();
+    const { start, end } = getCurrentRange();
+    renderSkeleton(start, end);
+    fetchSchedules(start, end);
+  })();
+
+  // Logout function
+  function logout() {
+    if (confirm('Apakah Anda yakin ingin logout?')) {
+      // Clear session data
+      sessionStorage.removeItem('userSession');
+      localStorage.removeItem('userSession');
+      
+      // Redirect to login
+      window.location.href = 'login.html';
+    }
+  }
+
+  // Check if user is logged in
+  document.addEventListener('DOMContentLoaded', function() {
+    const session = sessionStorage.getItem('userSession') || localStorage.getItem('userSession');
+    if (!session) {
+      // Redirect to login if not logged in
+      window.location.href = 'login.html';
+    }
+  });
+  </script>
+</body>
+</html>

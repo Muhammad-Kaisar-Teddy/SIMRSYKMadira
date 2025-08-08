@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekam Medis - RSU YK Madira</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(117deg, #FFF 0%, #E3B2D3 49.53%, #55ACBF 99.06%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .medical-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header dengan Contact Bar -->
+    <div class="bg-gradient-to-r from-pink-400 to-purple-400 text-white py-2 text-sm">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <span class="flex items-center">📞 (0274) 376-8000</span>
+                <span class="flex items-center">📧 info@rsuykmadira.com</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span>🏥 Jl. Solo Km 12, Sleman</span>
+                <button onclick="logout()" class="hover:bg-white/20 px-3 py-1 rounded transition-colors">
+                    🚪 Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 min-h-screen glass-effect no-print">
+            <div class="p-6">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 mb-8">
+                    <img src="img/logo-rsu.png" alt="Logo" class="w-12 h-12">
+                    <div>
+                        <h1 class="text-lg font-bold text-[#4C7990]">RSU YK Madira</h1>
+                        <p class="text-sm text-gray-600">SIMRS Dashboard</p>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="space-y-2">
+                    <a href="dashboard-admin.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                        <span>🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="pasien.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                        <span>👥</span>
+                        <span>Data Pasien</span>
+                    </a>
+                    <a href="booking.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                        <span>📅</span>
+                        <span>Appointment</span>
+                    </a>
+                    <a href="fasilitas-tarif.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                        <span>🏥</span>
+                        <span>Fasilitas & Tarif</span>
+                    </a>
+                    <div class="mt-8 pt-4 border-t border-white/20">
+                        <p class="text-xs text-gray-500 mb-2">Medical Records</p>
+                        <a href="rekam-medis.html" class="flex items-center space-x-3 p-3 rounded-lg text-[#4C7990] bg-white/50 border-l-4 border-[#4C7990] font-semibold">
+                            <span>📋</span>
+                            <span>Rekam Medis</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                            <span>💊</span>
+                            <span>Farmasi</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                            <span>🔬</span>
+                            <span>Laboratorium</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-[#4C7990] mb-2">Rekam Medis Elektronik</h1>
+                    <p class="text-gray-600">Kelola riwayat medis pasien secara digital</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-600">
+                        <div id="currentDateTime" class="font-semibold"></div>
+                        <div>Total RM: <span id="totalRecords" class="text-[#55ACBF] font-bold">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">📋</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsTotal">234</h3>
+                    <p class="text-gray-600">Total Rekam Medis</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">📝</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsToday">18</h3>
+                    <p class="text-gray-600">Kunjungan Hari Ini</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">⚕️</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsActive">5</h3>
+                    <p class="text-gray-600">Konsultasi Aktif</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">🔬</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsLab">12</h3>
+                    <p class="text-gray-600">Hasil Lab Pending</p>
+                </div>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="glass-effect rounded-2xl p-6 mb-8 no-print">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
+                    <!-- Search & Filter -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 flex-1">
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text" id="searchInput" placeholder="Cari berdasarkan nama, nomor RM, atau diagnosis..."
+                                   class="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <select id="departmentFilter" class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <option value="">Semua Departemen</option>
+                            <option value="penyakit_dalam">Penyakit Dalam</option>
+                            <option value="anak">Anak</option>
+                            <option value="bedah">Bedah</option>
+                            <option value="kandungan">Kandungan</option>
+                            <option value="jantung">Jantung</option>
+                            <option value="orthopedi">Orthopedi</option>
+                            <option value="mata">Mata</option>
+                            <option value="tht">THT</option>
+                        </select>
+                        <select id="statusFilter" class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <option value="">Semua Status</option>
+                            <option value="active">Sedang Perawatan</option>
+                            <option value="completed">Selesai</option>
+                            <option value="follow_up">Follow Up</option>
+                            <option value="referred">Dirujuk</option>
+                        </select>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-3">
+                        <button onclick="openNewRecordModal()" 
+                                class="bg-gradient-to-r from-[#4C7990] to-[#55ACBF] text-white px-6 py-3 rounded-xl font-semibold hover:from-[#55ACBF] hover:to-[#4C7990] transition-all transform hover:scale-105 shadow-lg">
+                            <span class="mr-2">➕</span>
+                            Rekam Medis Baru
+                        </button>
+                        <button onclick="exportRecords()" 
+                                class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg">
+                            <span class="mr-2">📊</span>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Records List -->
+            <div class="glass-effect rounded-2xl overflow-hidden">
+                <div class="p-6 border-b border-white/20">
+                    <h2 class="text-xl font-bold text-[#4C7990] flex items-center">
+                        <span class="mr-2">📋</span>
+                        Daftar Rekam Medis
+                    </h2>
+                    <p class="text-gray-600 mt-1">Menampilkan <span id="showingCount">10</span> dari <span id="totalCount">234</span> rekam medis</p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="flex items-center justify-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#55ACBF]"></div>
+                    <span class="ml-3 text-gray-600">Memuat rekam medis...</span>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden text-center py-12">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-4xl">🔍</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Tidak ada data ditemukan</h3>
+                    <p class="text-gray-500 mb-6">Tidak ada rekam medis yang sesuai dengan kriteria pencarian</p>
+                    <button onclick="clearFilters()" class="text-[#55ACBF] hover:text-[#4C7990] font-semibold">
+                        Hapus Filter
+                    </button>
+                </div>
+
+                <!-- Medical Records Cards -->
+                <div id="recordsList" class="grid gap-4 p-6">
+                    <!-- Medical record cards will be inserted here by JavaScript -->
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="p-6 border-t border-white/20 no-print">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-600">
+                            Menampilkan <span id="paginationInfo">1-10 dari 234</span> rekam medis
+                        </div>
+                        <div class="flex space-x-2" id="paginationButtons">
+                            <!-- Pagination buttons will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Medical Record Modal -->
+    <div id="newRecordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-[#4C7990]">Rekam Medis Baru</h2>
+                    <button onclick="closeNewRecordModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        ×
+                    </button>
+                </div>
+            </div>
+
+            <form id="newRecordForm" class="p-6 space-y-6">
+                <!-- Patient Selection -->
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <h3 class="font-semibold text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">👤</span>
+                        Informasi Pasien
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cari Pasien *</label>
+                            <input type="text" id="patientSearch" placeholder="Ketik nama atau nomor RM..." 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <div id="patientSuggestions" class="hidden mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+                                <!-- Patient suggestions will appear here -->
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Kunjungan *</label>
+                            <input type="datetime-local" id="visitDate" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                    </div>
+                    <div id="selectedPatientInfo" class="hidden mt-4 p-4 bg-blue-50 rounded-lg">
+                        <!-- Selected patient info will appear here -->
+                    </div>
+                </div>
+
+                <!-- Medical Information -->
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <h3 class="font-semibold text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">⚕️</span>
+                        Informasi Medis
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Departemen *</label>
+                            <select id="department" required 
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                                <option value="">Pilih Departemen</option>
+                                <option value="penyakit_dalam">Penyakit Dalam</option>
+                                <option value="anak">Anak</option>
+                                <option value="bedah">Bedah</option>
+                                <option value="kandungan">Kandungan</option>
+                                <option value="jantung">Jantung</option>
+                                <option value="orthopedi">Orthopedi</option>
+                                <option value="mata">Mata</option>
+                                <option value="tht">THT</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Dokter Pemeriksa *</label>
+                            <select id="doctor" required 
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                                <option value="">Pilih Dokter</option>
+                                <!-- Doctors will be populated based on department -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vital Signs -->
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <h3 class="font-semibold text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">💓</span>
+                        Tanda Vital
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tekanan Darah</label>
+                            <input type="text" id="bloodPressure" placeholder="120/80" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nadi (bpm)</label>
+                            <input type="number" id="pulse" placeholder="72" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Suhu (°C)</label>
+                            <input type="number" step="0.1" id="temperature" placeholder="36.5" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Berat Badan (kg)</label>
+                            <input type="number" id="weight" placeholder="65" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clinical Information -->
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <h3 class="font-semibold text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">📝</span>
+                        Informasi Klinis
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Keluhan Utama *</label>
+                            <textarea id="chiefComplaint" required rows="3" placeholder="Deskripsikan keluhan utama pasien..." 
+                                      class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Riwayat Penyakit Sekarang</label>
+                            <textarea id="presentIllness" rows="3" placeholder="Deskripsikan riwayat penyakit saat ini..." 
+                                      class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pemeriksaan Fisik</label>
+                                <textarea id="physicalExam" rows="4" placeholder="Hasil pemeriksaan fisik..." 
+                                          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Diagnosis *</label>
+                                <textarea id="diagnosis" required rows="4" placeholder="Diagnosis utama dan diagnosis banding..." 
+                                          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none"></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Rencana Tindakan & Terapi</label>
+                            <textarea id="treatment" rows="4" placeholder="Rencana pengobatan, tindakan medis, dan terapi..." 
+                                      class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                    <button type="button" onclick="closeNewRecordModal()" 
+                            class="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-gradient-to-r from-[#4C7990] to-[#55ACBF] text-white rounded-xl font-semibold hover:from-[#55ACBF] hover:to-[#4C7990] transition-all">
+                        Simpan Rekam Medis
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Medical Record Detail Modal -->
+    <div id="recordDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-[#4C7990]">Detail Rekam Medis</h2>
+                    <button onclick="closeRecordDetailModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        ×
+                    </button>
+                </div>
+            </div>
+            <div id="recordDetailContent" class="p-6">
+                <!-- Record detail content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentPage = 1;
+        let recordsPerPage = 10;
+        let allRecords = [];
+        let filteredRecords = [];
+        let selectedPatient = null;
+
+        // Sample medical records data
+        function generateSampleRecords() {
+            const patients = [
+                { id: 1, name: "Ahmad Santoso", rm: "RM000001", age: 45, gender: "male" },
+                { id: 2, name: "Siti Rahayu", rm: "RM000002", age: 32, gender: "female" },
+                { id: 3, name: "Budi Wibowo", rm: "RM000003", age: 28, gender: "male" },
+                { id: 4, name: "Rina Kusuma", rm: "RM000004", age: 55, gender: "female" },
+                { id: 5, name: "Joko Pratama", rm: "RM000005", age: 67, gender: "male" }
+            ];
+
+            const departments = [
+                { id: "penyakit_dalam", name: "Penyakit Dalam", doctors: ["Dr. Ahmad Subagyo, Sp.PD", "Dr. Sari Indrawati, Sp.PD"] },
+                { id: "anak", name: "Anak", doctors: ["Dr. Maya Sari, Sp.A", "Dr. Indra Kusuma, Sp.A"] },
+                { id: "bedah", name: "Bedah", doctors: ["Dr. Budi Santoso, Sp.B", "Dr. Rina Wati, Sp.B"] },
+                { id: "kandungan", name: "Kandungan", doctors: ["Dr. Dewi Lestari, Sp.OG", "Dr. Sinta Maharani, Sp.OG"] }
+            ];
+
+            const complaints = [
+                "Demam tinggi sejak 3 hari",
+                "Nyeri dada saat bernapas",
+                "Sakit kepala berkepanjangan",
+                "Nyeri perut kanan bawah",
+                "Batuk berdahak kekuningan",
+                "Mual dan muntah",
+                "Sesak napas saat beraktivitas",
+                "Nyeri sendi dan bengkak"
+            ];
+
+            const diagnoses = [
+                "Demam Berdarah Dengue (A90)",
+                "Pneumonia (J18.9)",
+                "Migrain (G43.9)",
+                "Appendicitis Akut (K35.9)",
+                "Bronkitis Akut (J20.9)",
+                "Gastritis (K29.7)",
+                "Asma Bronkial (J45.9)",
+                "Arthritis Rheumatoid (M06.9)"
+            ];
+
+            const statuses = ["active", "completed", "follow_up", "referred"];
+            
+            const records = [];
+            
+            for (let i = 1; i <= 234; i++) {
+                const patient = patients[Math.floor(Math.random() * patients.length)];
+                const department = departments[Math.floor(Math.random() * departments.length)];
+                const doctor = department.doctors[Math.floor(Math.random() * department.doctors.length)];
+                const visitDate = new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+                
+                records.push({
+                    id: i,
+                    recordNumber: `RM${String(i).padStart(6, '0')}/2024`,
+                    patient: patient,
+                    visitDate: visitDate.toISOString(),
+                    department: department,
+                    doctor: doctor,
+                    chiefComplaint: complaints[Math.floor(Math.random() * complaints.length)],
+                    diagnosis: diagnoses[Math.floor(Math.random() * diagnoses.length)],
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    vitalSigns: {
+                        bloodPressure: `${120 + Math.floor(Math.random() * 40)}/${80 + Math.floor(Math.random() * 20)}`,
+                        pulse: 60 + Math.floor(Math.random() * 40),
+                        temperature: 36.0 + (Math.random() * 3),
+                        weight: 50 + Math.floor(Math.random() * 50)
+                    },
+                    treatment: "Terapi simptomatik, istirahat total, kontrol 1 minggu",
+                    createdAt: visitDate.toISOString()
+                });
+            }
+            
+            return records.sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
+        }
+
+        // Update current date/time
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('currentDateTime').textContent = 
+                now.toLocaleDateString('id-ID', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+        }
+
+        // Initialize data
+        function initializeData() {
+            allRecords = generateSampleRecords();
+            filteredRecords = [...allRecords];
+            updateStats();
+            displayRecords();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayRecords = allRecords.filter(r => r.visitDate.split('T')[0] === today);
+            const activeRecords = allRecords.filter(r => r.status === 'active');
+            const pendingLab = Math.floor(Math.random() * 20) + 5; // Simulated
+
+            document.getElementById('statsTotal').textContent = allRecords.length;
+            document.getElementById('statsToday').textContent = todayRecords.length;
+            document.getElementById('statsActive').textContent = activeRecords.length;
+            document.getElementById('statsLab').textContent = pendingLab;
+            document.getElementById('totalRecords').textContent = allRecords.length;
+        }
+
+        // Display records
+        function displayRecords() {
+            const startIndex = (currentPage - 1) * recordsPerPage;
+            const endIndex = startIndex + recordsPerPage;
+            const recordsToShow = filteredRecords.slice(startIndex, endIndex);
+            
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            const recordsList = document.getElementById('recordsList');
+            
+            // Hide loading
+            loadingState.classList.add('hidden');
+            
+            if (recordsToShow.length === 0) {
+                recordsList.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            recordsList.classList.remove('hidden');
+            
+            recordsList.innerHTML = recordsToShow.map(record => createRecordCard(record)).join('');
+            
+            updatePagination();
+            updateCounts();
+        }
+
+        // Create record card
+        function createRecordCard(record) {
+            const statusColors = {
+                'active': 'bg-yellow-100 text-yellow-800',
+                'completed': 'bg-green-100 text-green-800',
+                'follow_up': 'bg-blue-100 text-blue-800',
+                'referred': 'bg-purple-100 text-purple-800'
+            };
+            const statusTexts = {
+                'active': 'Sedang Perawatan',
+                'completed': 'Selesai',
+                'follow_up': 'Follow Up',
+                'referred': 'Dirujuk'
+            };
+
+            return `
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all medical-card">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-[#4C7990] to-[#55ACBF] rounded-full flex items-center justify-center text-white font-bold">
+                                    ${record.patient.name.charAt(0)}
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-800">${record.patient.name}</h3>
+                                    <p class="text-sm text-gray-600">RM: ${record.patient.rm}</p>
+                                    <p class="text-sm text-gray-600">${record.patient.gender === 'male' ? '👨' : '👩'} ${record.patient.age} tahun</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColors[record.status]}">
+                                ${statusTexts[record.status]}
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-3 mb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="text-gray-500">Departemen:</span>
+                                    <p class="font-medium">${record.department.name}</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500">Dokter:</span>
+                                    <p class="font-medium">${record.doctor}</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <span class="text-gray-500">Keluhan Utama:</span>
+                                <p class="font-medium">${record.chiefComplaint}</p>
+                            </div>
+                            
+                            <div>
+                                <span class="text-gray-500">Diagnosis:</span>
+                                <p class="font-medium text-[#4C7990]">${record.diagnosis}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-xs bg-gray-50 p-3 rounded-lg">
+                                <div>TD: ${record.vitalSigns.bloodPressure}</div>
+                                <div>Nadi: ${record.vitalSigns.pulse} bpm</div>
+                                <div>Suhu: ${record.vitalSigns.temperature.toFixed(1)}°C</div>
+                                <div>BB: ${record.vitalSigns.weight} kg</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <span class="text-sm text-gray-500">
+                                ${new Date(record.visitDate).toLocaleDateString('id-ID', { 
+                                    day: 'numeric', 
+                                    month: 'short', 
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </span>
+                            <div class="flex space-x-2">
+                                <button onclick="viewRecordDetail(${record.id})" 
+                                        class="text-[#55ACBF] hover:text-[#4C7990] font-medium text-sm">
+                                    👁️ Detail
+                                </button>
+                                <button onclick="editRecord(${record.id})" 
+                                        class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                                    ✏️ Edit
+                                </button>
+                                <button onclick="printRecord(${record.id})" 
+                                        class="text-green-600 hover:text-green-800 font-medium text-sm">
+                                    🖨️ Print
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Search and filter functions
+        function setupFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const departmentFilter = document.getElementById('departmentFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const departmentValue = departmentFilter.value;
+                const statusValue = statusFilter.value;
+                
+                filteredRecords = allRecords.filter(record => {
+                    const matchesSearch = !searchTerm || 
+                        record.patient.name.toLowerCase().includes(searchTerm) ||
+                        record.patient.rm.toLowerCase().includes(searchTerm) ||
+                        record.recordNumber.toLowerCase().includes(searchTerm) ||
+                        record.diagnosis.toLowerCase().includes(searchTerm) ||
+                        record.chiefComplaint.toLowerCase().includes(searchTerm);
+                    
+                    const matchesDepartment = !departmentValue || record.department.id === departmentValue;
+                    const matchesStatus = !statusValue || record.status === statusValue;
+                    
+                    return matchesSearch && matchesDepartment && matchesStatus;
+                });
+                
+                currentPage = 1;
+                displayRecords();
+            }
+            
+            searchInput.addEventListener('input', applyFilters);
+            departmentFilter.addEventListener('change', applyFilters);
+            statusFilter.addEventListener('change', applyFilters);
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('departmentFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            filteredRecords = [...allRecords];
+            currentPage = 1;
+            displayRecords();
+        }
+
+        // Update pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
+            const paginationButtons = document.getElementById('paginationButtons');
+            const paginationInfo = document.getElementById('paginationInfo');
+            
+            const startIndex = (currentPage - 1) * recordsPerPage + 1;
+            const endIndex = Math.min(currentPage * recordsPerPage, filteredRecords.length);
+            
+            paginationInfo.textContent = `${startIndex}-${endIndex} dari ${filteredRecords.length}`;
+            
+            let buttonsHTML = '';
+            
+            // Previous button
+            buttonsHTML += `
+                <button onclick="changePage(${currentPage - 1})" 
+                        ${currentPage === 1 ? 'disabled' : ''} 
+                        class="px-3 py-2 rounded-lg border ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'} transition-colors">
+                    ← Prev
+                </button>
+            `;
+            
+            // Page numbers
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                buttonsHTML += `
+                    <button onclick="changePage(${i})" 
+                            class="px-3 py-2 rounded-lg border ${i === currentPage ? 'bg-[#55ACBF] text-white' : 'text-gray-700 hover:bg-gray-50'} transition-colors">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            // Next button
+            buttonsHTML += `
+                <button onclick="changePage(${currentPage + 1})" 
+                        ${currentPage === totalPages ? 'disabled' : ''} 
+                        class="px-3 py-2 rounded-lg border ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'} transition-colors">
+                    Next →
+                </button>
+            `;
+            
+            paginationButtons.innerHTML = buttonsHTML;
+        }
+
+        // Change page
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                displayRecords();
+            }
+        }
+
+        // Update counts
+        function updateCounts() {
+            document.getElementById('showingCount').textContent = filteredRecords.length;
+            document.getElementById('totalCount').textContent = allRecords.length;
+        }
+
+        // Modal functions
+        function openNewRecordModal() {
+            document.getElementById('newRecordModal').classList.remove('hidden');
+            document.getElementById('visitDate').value = new Date().toISOString().slice(0, 16);
+        }
+
+        function closeNewRecordModal() {
+            document.getElementById('newRecordModal').classList.add('hidden');
+            document.getElementById('newRecordForm').reset();
+            selectedPatient = null;
+        }
+
+        function viewRecordDetail(id) {
+            const record = allRecords.find(r => r.id === id);
+            if (!record) return;
+            
+            const detailContent = document.getElementById('recordDetailContent');
+            detailContent.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Patient Info -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="font-bold text-lg text-[#4C7990] mb-4 flex items-center">
+                            <span class="mr-2">👤</span>
+                            Informasi Pasien
+                        </h3>
+                        <div class="space-y-3">
+                            <div><span class="font-medium">Nama:</span> ${record.patient.name}</div>
+                            <div><span class="font-medium">No. RM:</span> ${record.patient.rm}</div>
+                            <div><span class="font-medium">Umur:</span> ${record.patient.age} tahun</div>
+                            <div><span class="font-medium">Jenis Kelamin:</span> ${record.patient.gender === 'male' ? 'Laki-laki' : 'Perempuan'}</div>
+                            <div><span class="font-medium">Tanggal Kunjungan:</span> ${new Date(record.visitDate).toLocaleDateString('id-ID', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Medical Info -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="font-bold text-lg text-[#4C7990] mb-4 flex items-center">
+                            <span class="mr-2">⚕️</span>
+                            Informasi Medis
+                        </h3>
+                        <div class="space-y-3">
+                            <div><span class="font-medium">Departemen:</span> ${record.department.name}</div>
+                            <div><span class="font-medium">Dokter:</span> ${record.doctor}</div>
+                            <div><span class="font-medium">Status:</span> 
+                                <span class="px-2 py-1 rounded text-xs font-semibold ${
+                                    record.status === 'active' ? 'bg-yellow-100 text-yellow-800' :
+                                    record.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                    record.status === 'follow_up' ? 'bg-blue-100 text-blue-800' :
+                                    'bg-purple-100 text-purple-800'
+                                }">
+                                    ${
+                                        record.status === 'active' ? 'Sedang Perawatan' :
+                                        record.status === 'completed' ? 'Selesai' :
+                                        record.status === 'follow_up' ? 'Follow Up' :
+                                        'Dirujuk'
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vital Signs -->
+                <div class="bg-gray-50 rounded-xl p-6 mt-6">
+                    <h3 class="font-bold text-lg text-[#4C7990] mb-4 flex items-center">
+                        <span class="mr-2">💓</span>
+                        Tanda Vital
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-[#55ACBF]">${record.vitalSigns.bloodPressure}</div>
+                            <div class="text-sm text-gray-600">Tekanan Darah</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-[#55ACBF]">${record.vitalSigns.pulse}</div>
+                            <div class="text-sm text-gray-600">Nadi (bpm)</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-[#55ACBF]">${record.vitalSigns.temperature.toFixed(1)}°C</div>
+                            <div class="text-sm text-gray-600">Suhu Tubuh</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-[#55ACBF]">${record.vitalSigns.weight}</div>
+                            <div class="text-sm text-gray-600">Berat Badan (kg)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clinical Information -->
+                <div class="bg-gray-50 rounded-xl p-6 mt-6">
+                    <h3 class="font-bold text-lg text-[#4C7990] mb-4 flex items-center">
+                        <span class="mr-2">📝</span>
+                        Informasi Klinis
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-2">Keluhan Utama:</h4>
+                            <p class="text-gray-800">${record.chiefComplaint}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-2">Diagnosis:</h4>
+                            <p class="text-gray-800 font-medium">${record.diagnosis}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-2">Rencana Pengobatan:</h4>
+                            <p class="text-gray-800">${record.treatment}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+                    <button onclick="editRecord(${record.id}); closeRecordDetailModal();" 
+                            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all">
+                        ✏️ Edit
+                    </button>
+                    <button onclick="printRecord(${record.id})" 
+                            class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all">
+                        🖨️ Print
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('recordDetailModal').classList.remove('hidden');
+        }
+
+        function closeRecordDetailModal() {
+            document.getElementById('recordDetailModal').classList.add('hidden');
+        }
+
+        function editRecord(id) {
+            alert(`Edit rekam medis #${id} - Fitur dalam pengembangan`);
+        }
+
+        function printRecord(id) {
+            const record = allRecords.find(r => r.id === id);
+            if (!record) return;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Rekam Medis - ${record.patient.name}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+                            .section { margin-bottom: 30px; }
+                            .section h3 { background: #f0f0f0; padding: 10px; margin: 0 0 15px 0; }
+                            .info-row { display: flex; margin-bottom: 10px; }
+                            .info-label { font-weight: bold; width: 150px; }
+                            .vital-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>RSU YK Madira</h1>
+                            <h2>Rekam Medis Elektronik</h2>
+                            <p>No. RM: ${record.recordNumber}</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Informasi Pasien</h3>
+                            <div class="info-row"><span class="info-label">Nama:</span> ${record.patient.name}</div>
+                            <div class="info-row"><span class="info-label">No. RM:</span> ${record.patient.rm}</div>
+                            <div class="info-row"><span class="info-label">Umur:</span> ${record.patient.age} tahun</div>
+                            <div class="info-row"><span class="info-label">Jenis Kelamin:</span> ${record.patient.gender === 'male' ? 'Laki-laki' : 'Perempuan'}</div>
+                            <div class="info-row"><span class="info-label">Tanggal Kunjungan:</span> ${new Date(record.visitDate).toLocaleDateString('id-ID', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}</div>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Informasi Medis</h3>
+                            <div class="info-row"><span class="info-label">Departemen:</span> ${record.department.name}</div>
+                            <div class="info-row"><span class="info-label">Dokter Pemeriksa:</span> ${record.doctor}</div>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Tanda Vital</h3>
+                            <div class="vital-grid">
+                                <div>
+                                    <strong>Tekanan Darah</strong><br>
+                                    ${record.vitalSigns.bloodPressure}
+                                </div>
+                                <div>
+                                    <strong>Nadi</strong><br>
+                                    ${record.vitalSigns.pulse} bpm
+                                </div>
+                                <div>
+                                    <strong>Suhu</strong><br>
+                                    ${record.vitalSigns.temperature.toFixed(1)}°C
+                                </div>
+                                <div>
+                                    <strong>Berat Badan</strong><br>
+                                    ${record.vitalSigns.weight} kg
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Informasi Klinis</h3>
+                            <div style="margin-bottom: 20px;">
+                                <strong>Keluhan Utama:</strong><br>
+                                ${record.chiefComplaint}
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <strong>Diagnosis:</strong><br>
+                                ${record.diagnosis}
+                            </div>
+                            <div>
+                                <strong>Rencana Pengobatan:</strong><br>
+                                ${record.treatment}
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 50px; text-align: right; font-size: 12px; color: #666;">
+                            Dicetak pada: ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}<br>
+                            Dokter: ${record.doctor}
+                        </div>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function exportRecords() {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "No RM,Tanggal,Nama Pasien,Departemen,Dokter,Keluhan,Diagnosis,Status\n"
+                + filteredRecords.map(r => 
+                    `${r.recordNumber},"${new Date(r.visitDate).toLocaleDateString('id-ID')}","${r.patient.name}","${r.department.name}","${r.doctor}","${r.chiefComplaint}","${r.diagnosis}","${r.status}"`
+                ).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `rekam_medis_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                localStorage.removeItem('userSession');
+                sessionStorage.removeItem('userSession');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Form submission
+        document.getElementById('newRecordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Rekam medis baru berhasil disimpan! (Demo mode)');
+            closeNewRecordModal();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateTime();
+            setInterval(updateDateTime, 60000); // Update every minute
+            
+            initializeData();
+            setupFilters();
+            
+            // Close modals when clicking outside
+            document.getElementById('newRecordModal').addEventListener('click', function(e) {
+                if (e.target === this) closeNewRecordModal();
+            });
+            
+            document.getElementById('recordDetailModal').addEventListener('click', function(e) {
+                if (e.target === this) closeRecordDetailModal();
+            });
+        });
+    </script>
+</body>
+</html>

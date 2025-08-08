@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Pasien - RSU YK Madira</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(117deg, #FFF 0%, #E3B2D3 49.53%, #55ACBF 99.06%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .sidebar-active {
+            background: rgba(76, 121, 144, 0.1);
+            border-left: 4px solid #4C7990;
+        }
+        .patient-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header dengan Contact Bar -->
+    <div class="bg-gradient-to-r from-pink-400 to-purple-400 text-white py-2 text-sm">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <span class="flex items-center">📞 (0274) 376-8000</span>
+                <span class="flex items-center">📧 info@rsuykmadira.com</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span>🏥 Jl. Solo Km 12, Sleman</span>
+                <button onclick="logout()" class="hover:bg-white/20 px-3 py-1 rounded transition-colors">
+                    🚪 Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 min-h-screen glass-effect no-print">
+            <div class="p-6">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 mb-8">
+                    <img src="img/logo-rsu.png" alt="Logo" class="w-12 h-12">
+                    <div>
+                        <h1 class="text-lg font-bold text-[#4C7990]">RSU YK Madira</h1>
+                        <p class="text-sm text-gray-600">SIMRS Dashboard</p>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="space-y-2">
+                    <a href="dashboard-admin.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                        <span>🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="pasien.html" class="flex items-center space-x-3 p-3 rounded-lg text-[#4C7990] bg-white/50 sidebar-active font-semibold">
+                        <span>👥</span>
+                        <span>Data Pasien</span>
+                    </a>
+                    <a href="booking.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                        <span>📅</span>
+                        <span>Appointment</span>
+                    </a>
+                    <a href="fasilitas-tarif.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                        <span>🏥</span>
+                        <span>Fasilitas & Tarif</span>
+                    </a>
+                    <div class="mt-8 pt-4 border-t border-white/20">
+                        <p class="text-xs text-gray-500 mb-2">Medical Records</p>
+                        <a href="rekam-medis.html" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                            <span>📋</span>
+                            <span>Rekam Medis</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                            <span>💊</span>
+                            <span>Farmasi</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-white/50 transition-colors">
+                            <span>🔬</span>
+                            <span>Laboratorium</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-[#4C7990] mb-2">Manajemen Data Pasien</h1>
+                    <p class="text-gray-600">Kelola informasi pasien, pendaftaran, dan rekam medis</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-600">
+                        <div id="currentDateTime" class="font-semibold"></div>
+                        <div>Total Pasien: <span id="totalPatients" class="text-[#55ACBF] font-bold">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">👥</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsTotal">156</h3>
+                    <p class="text-gray-600">Total Pasien</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">📋</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsNewToday">12</h3>
+                    <p class="text-gray-600">Pendaftaran Hari Ini</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">⏰</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsInProgress">8</h3>
+                    <p class="text-gray-600">Sedang Periksa</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl">✅</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#4C7990]" id="statsCompleted">45</h3>
+                    <p class="text-gray-600">Selesai Hari Ini</p>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="glass-effect rounded-2xl p-6 mb-8 no-print">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
+                    <!-- Search & Filter -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 flex-1">
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text" id="searchInput" placeholder="Cari berdasarkan nama, NIK, atau nomor RM..."
+                                   class="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <select id="statusFilter" class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <option value="">Semua Status</option>
+                            <option value="waiting">Menunggu</option>
+                            <option value="in_progress">Sedang Periksa</option>
+                            <option value="completed">Selesai</option>
+                            <option value="cancelled">Dibatalkan</option>
+                        </select>
+                        <select id="genderFilter" class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <option value="">Semua Gender</option>
+                            <option value="male">Laki-laki</option>
+                            <option value="female">Perempuan</option>
+                        </select>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-3">
+                        <button onclick="openAddPatientModal()" 
+                                class="bg-gradient-to-r from-[#4C7990] to-[#55ACBF] text-white px-6 py-3 rounded-xl font-semibold hover:from-[#55ACBF] hover:to-[#4C7990] transition-all transform hover:scale-105 shadow-lg">
+                            <span class="mr-2">➕</span>
+                            Tambah Pasien
+                        </button>
+                        <button onclick="exportData()" 
+                                class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg">
+                            <span class="mr-2">📊</span>
+                            Export
+                        </button>
+                        <button onclick="printPatientList()" 
+                                class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg">
+                            <span class="mr-2">🖨️</span>
+                            Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients List -->
+            <div class="glass-effect rounded-2xl overflow-hidden">
+                <div class="p-6 border-b border-white/20">
+                    <h2 class="text-xl font-bold text-[#4C7990] flex items-center">
+                        <span class="mr-2">📋</span>
+                        Daftar Pasien
+                    </h2>
+                    <p class="text-gray-600 mt-1">Menampilkan <span id="showingCount">10</span> dari <span id="totalCount">156</span> pasien</p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="flex items-center justify-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#55ACBF]"></div>
+                    <span class="ml-3 text-gray-600">Memuat data pasien...</span>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden text-center py-12">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-4xl">🔍</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Tidak ada data ditemukan</h3>
+                    <p class="text-gray-500 mb-6">Tidak ada pasien yang sesuai dengan kriteria pencarian</p>
+                    <button onclick="clearFilters()" class="text-[#55ACBF] hover:text-[#4C7990] font-semibold">
+                        Hapus Filter
+                    </button>
+                </div>
+
+                <!-- Patient Cards -->
+                <div id="patientsList" class="grid gap-4 p-6">
+                    <!-- Patient cards will be inserted here by JavaScript -->
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="p-6 border-t border-white/20 no-print">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-600">
+                            Menampilkan <span id="paginationInfo">1-10 dari 156</span> pasien
+                        </div>
+                        <div class="flex space-x-2" id="paginationButtons">
+                            <!-- Pagination buttons will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Patient Modal -->
+    <div id="patientModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 id="modalTitle" class="text-2xl font-bold text-[#4C7990]">Tambah Pasien Baru</h2>
+                    <button onclick="closePatientModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        ×
+                    </button>
+                </div>
+            </div>
+
+            <form id="patientForm" class="p-6 space-y-6">
+                <input type="hidden" id="patientId" name="id">
+                
+                <!-- Personal Information -->
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <h3 class="font-semibold text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">👤</span>
+                        Informasi Pribadi
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+                            <input type="text" id="fullName" name="fullName" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NIK *</label>
+                            <input type="text" id="nik" name="nik" required maxlength="16" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir *</label>
+                            <input type="date" id="birthDate" name="birthDate" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin *</label>
+                            <select id="gender" name="gender" required 
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="male">Laki-laki</option>
+                                <option value="female">Perempuan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">No. Telepon</label>
+                            <input type="tel" id="phone" name="phone" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" name="email" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
+                        <textarea id="address" name="address" rows="3" 
+                                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Medical Information -->
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <h3 class="font-semibold text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">🏥</span>
+                        Informasi Medis
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Golongan Darah</label>
+                            <select id="bloodType" name="bloodType" 
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                                <option value="">Pilih Golongan Darah</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="AB">AB</option>
+                                <option value="O">O</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Asuransi</label>
+                            <select id="insurance" name="insurance" 
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                                <option value="">Pilih Asuransi</option>
+                                <option value="bpjs">BPJS Kesehatan</option>
+                                <option value="mandiri">Mandiri Inhealth</option>
+                                <option value="bni">BNI Life</option>
+                                <option value="axa">AXA Mandiri</option>
+                                <option value="umum">Umum/Pribadi</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Riwayat Alergi</label>
+                        <textarea id="allergies" name="allergies" rows="2" placeholder="Sebutkan riwayat alergi obat, makanan, atau lainnya..." 
+                                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none"></textarea>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kontak Darurat</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="emergencyContact" name="emergencyContact" placeholder="Nama kontak darurat" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                            <input type="tel" id="emergencyPhone" name="emergencyPhone" placeholder="No. telepon darurat" 
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#55ACBF] focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                    <button type="button" onclick="closePatientModal()" 
+                            class="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-gradient-to-r from-[#4C7990] to-[#55ACBF] text-white rounded-xl font-semibold hover:from-[#55ACBF] hover:to-[#4C7990] transition-all">
+                        <span id="submitBtnText">Simpan Pasien</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Patient Detail Modal -->
+    <div id="patientDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-[#4C7990]">Detail Pasien</h2>
+                    <button onclick="closePatientDetailModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                        ×
+                    </button>
+                </div>
+            </div>
+            <div id="patientDetailContent" class="p-6">
+                <!-- Patient detail content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentPage = 1;
+        let patientsPerPage = 10;
+        let allPatients = [];
+        let filteredPatients = [];
+        let editingPatientId = null;
+
+        // Update current date/time
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('currentDateTime').textContent = 
+                now.toLocaleDateString('id-ID', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+        }
+
+        // Sample patient data
+        function generateSamplePatients() {
+            const firstNames = ['Ahmad', 'Siti', 'Budi', 'Rina', 'Joko', 'Maya', 'Agus', 'Dewi', 'Rudi', 'Lina', 'Eko', 'Sri', 'Hendra', 'Wati', 'Andi'];
+            const lastNames = ['Santoso', 'Wijaya', 'Kusuma', 'Pratama', 'Sari', 'Putri', 'Wibowo', 'Handayani', 'Nugroho', 'Rahayu'];
+            const insuranceTypes = ['bpjs', 'mandiri', 'bni', 'axa', 'umum'];
+            const bloodTypes = ['A', 'B', 'AB', 'O'];
+            const statuses = ['waiting', 'in_progress', 'completed', 'cancelled'];
+            
+            const patients = [];
+            
+            for (let i = 1; i <= 156; i++) {
+                const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const gender = Math.random() > 0.5 ? 'male' : 'female';
+                const birthYear = 1950 + Math.floor(Math.random() * 60);
+                const registrationDate = new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+                
+                patients.push({
+                    id: i,
+                    medicalRecordNumber: `RM${String(i).padStart(6, '0')}`,
+                    fullName: `${firstName} ${lastName}`,
+                    nik: `33${String(Math.floor(Math.random() * 100000000000000)).padStart(14, '0')}`,
+                    birthDate: `${birthYear}-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
+                    gender: gender,
+                    phone: `08${String(Math.floor(Math.random() * 1000000000)).padStart(10, '0')}`,
+                    email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@email.com`,
+                    address: `Jl. ${lastName} No. ${Math.floor(Math.random() * 100) + 1}, Yogyakarta`,
+                    bloodType: bloodTypes[Math.floor(Math.random() * bloodTypes.length)],
+                    insurance: insuranceTypes[Math.floor(Math.random() * insuranceTypes.length)],
+                    allergies: Math.random() > 0.7 ? 'Tidak ada alergi' : 'Alergi udang, kacang',
+                    emergencyContact: `${firstName} Family`,
+                    emergencyPhone: `08${String(Math.floor(Math.random() * 1000000000)).padStart(10, '0')}`,
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    registrationDate: registrationDate.toISOString(),
+                    lastVisit: registrationDate.toISOString().split('T')[0],
+                    visitCount: Math.floor(Math.random() * 20) + 1
+                });
+            }
+            
+            return patients;
+        }
+
+        // Initialize patients data
+        function initializeData() {
+            allPatients = generateSamplePatients();
+            filteredPatients = [...allPatients];
+            updateStats();
+            displayPatients();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayPatients = allPatients.filter(p => p.lastVisit === today);
+            const inProgress = allPatients.filter(p => p.status === 'in_progress');
+            const completed = allPatients.filter(p => p.status === 'completed' && p.lastVisit === today);
+
+            document.getElementById('statsTotal').textContent = allPatients.length;
+            document.getElementById('statsNewToday').textContent = todayPatients.length;
+            document.getElementById('statsInProgress').textContent = inProgress.length;
+            document.getElementById('statsCompleted').textContent = completed.length;
+            document.getElementById('totalPatients').textContent = allPatients.length;
+        }
+
+        // Display patients
+        function displayPatients() {
+            const startIndex = (currentPage - 1) * patientsPerPage;
+            const endIndex = startIndex + patientsPerPage;
+            const patientsToShow = filteredPatients.slice(startIndex, endIndex);
+            
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            const patientsList = document.getElementById('patientsList');
+            
+            // Hide loading
+            loadingState.classList.add('hidden');
+            
+            if (patientsToShow.length === 0) {
+                patientsList.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            patientsList.classList.remove('hidden');
+            
+            patientsList.innerHTML = patientsToShow.map(patient => createPatientCard(patient)).join('');
+            
+            updatePagination();
+            updateCounts();
+        }
+
+        // Create patient card
+        function createPatientCard(patient) {
+            const age = new Date().getFullYear() - new Date(patient.birthDate).getFullYear();
+            const statusColors = {
+                'waiting': 'bg-yellow-100 text-yellow-800',
+                'in_progress': 'bg-blue-100 text-blue-800',
+                'completed': 'bg-green-100 text-green-800',
+                'cancelled': 'bg-red-100 text-red-800'
+            };
+            const statusTexts = {
+                'waiting': 'Menunggu',
+                'in_progress': 'Sedang Periksa',
+                'completed': 'Selesai',
+                'cancelled': 'Dibatalkan'
+            };
+
+            return `
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all patient-card">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-[#4C7990] to-[#55ACBF] rounded-full flex items-center justify-center text-white font-bold">
+                                    ${patient.fullName.charAt(0)}
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-800">${patient.fullName}</h3>
+                                    <p class="text-sm text-gray-600">RM: ${patient.medicalRecordNumber}</p>
+                                    <p class="text-sm text-gray-600">${patient.gender === 'male' ? '👨' : '👩'} ${age} tahun • ${patient.bloodType || 'N/A'}</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColors[patient.status]}">
+                                ${statusTexts[patient.status]}
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+                            <div>
+                                <span class="text-gray-500">NIK:</span>
+                                <p class="font-medium">${patient.nik}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Telepon:</span>
+                                <p class="font-medium">${patient.phone}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Asuransi:</span>
+                                <p class="font-medium capitalize">${patient.insurance}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Kunjungan:</span>
+                                <p class="font-medium">${patient.visitCount}x</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <span class="text-sm text-gray-500">
+                                Terakhir: ${new Date(patient.lastVisit).toLocaleDateString('id-ID')}
+                            </span>
+                            <div class="flex space-x-2">
+                                <button onclick="viewPatientDetail(${patient.id})" 
+                                        class="text-[#55ACBF] hover:text-[#4C7990] font-medium text-sm">
+                                    👁️ Detail
+                                </button>
+                                <button onclick="editPatient(${patient.id})" 
+                                        class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                                    ✏️ Edit
+                                </button>
+                                <button onclick="deletePatient(${patient.id})" 
+                                        class="text-red-600 hover:text-red-800 font-medium text-sm">
+                                    🗑️ Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Search and filter functions
+        function setupFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const genderFilter = document.getElementById('genderFilter');
+            
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const statusValue = statusFilter.value;
+                const genderValue = genderFilter.value;
+                
+                filteredPatients = allPatients.filter(patient => {
+                    const matchesSearch = !searchTerm || 
+                        patient.fullName.toLowerCase().includes(searchTerm) ||
+                        patient.nik.includes(searchTerm) ||
+                        patient.medicalRecordNumber.toLowerCase().includes(searchTerm);
+                    
+                    const matchesStatus = !statusValue || patient.status === statusValue;
+                    const matchesGender = !genderValue || patient.gender === genderValue;
+                    
+                    return matchesSearch && matchesStatus && matchesGender;
+                });
+                
+                currentPage = 1;
+                displayPatients();
+            }
+            
+            searchInput.addEventListener('input', applyFilters);
+            statusFilter.addEventListener('change', applyFilters);
+            genderFilter.addEventListener('change', applyFilters);
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('genderFilter').value = '';
+            filteredPatients = [...allPatients];
+            currentPage = 1;
+            displayPatients();
+        }
+
+        // Update pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
+            const paginationButtons = document.getElementById('paginationButtons');
+            const paginationInfo = document.getElementById('paginationInfo');
+            
+            const startIndex = (currentPage - 1) * patientsPerPage + 1;
+            const endIndex = Math.min(currentPage * patientsPerPage, filteredPatients.length);
+            
+            paginationInfo.textContent = `${startIndex}-${endIndex} dari ${filteredPatients.length}`;
+            
+            let buttonsHTML = '';
+            
+            // Previous button
+            buttonsHTML += `
+                <button onclick="changePage(${currentPage - 1})" 
+                        ${currentPage === 1 ? 'disabled' : ''} 
+                        class="px-3 py-2 rounded-lg border ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'} transition-colors">
+                    ← Prev
+                </button>
+            `;
+            
+            // Page numbers
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                buttonsHTML += `
+                    <button onclick="changePage(${i})" 
+                            class="px-3 py-2 rounded-lg border ${i === currentPage ? 'bg-[#55ACBF] text-white' : 'text-gray-700 hover:bg-gray-50'} transition-colors">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            // Next button
+            buttonsHTML += `
+                <button onclick="changePage(${currentPage + 1})" 
+                        ${currentPage === totalPages ? 'disabled' : ''} 
+                        class="px-3 py-2 rounded-lg border ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'} transition-colors">
+                    Next →
+                </button>
+            `;
+            
+            paginationButtons.innerHTML = buttonsHTML;
+        }
+
+        // Change page
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                displayPatients();
+            }
+        }
+
+        // Update counts
+        function updateCounts() {
+            document.getElementById('showingCount').textContent = filteredPatients.length;
+            document.getElementById('totalCount').textContent = allPatients.length;
+        }
+
+        // Modal functions
+        function openAddPatientModal() {
+            editingPatientId = null;
+            document.getElementById('modalTitle').textContent = 'Tambah Pasien Baru';
+            document.getElementById('submitBtnText').textContent = 'Simpan Pasien';
+            document.getElementById('patientForm').reset();
+            document.getElementById('patientModal').classList.remove('hidden');
+        }
+
+        function closePatientModal() {
+            document.getElementById('patientModal').classList.add('hidden');
+            editingPatientId = null;
+        }
+
+        function editPatient(id) {
+            const patient = allPatients.find(p => p.id === id);
+            if (!patient) return;
+            
+            editingPatientId = id;
+            document.getElementById('modalTitle').textContent = 'Edit Data Pasien';
+            document.getElementById('submitBtnText').textContent = 'Update Pasien';
+            
+            // Fill form with patient data
+            document.getElementById('patientId').value = patient.id;
+            document.getElementById('fullName').value = patient.fullName;
+            document.getElementById('nik').value = patient.nik;
+            document.getElementById('birthDate').value = patient.birthDate;
+            document.getElementById('gender').value = patient.gender;
+            document.getElementById('phone').value = patient.phone;
+            document.getElementById('email').value = patient.email;
+            document.getElementById('address').value = patient.address;
+            document.getElementById('bloodType').value = patient.bloodType;
+            document.getElementById('insurance').value = patient.insurance;
+            document.getElementById('allergies').value = patient.allergies;
+            document.getElementById('emergencyContact').value = patient.emergencyContact;
+            document.getElementById('emergencyPhone').value = patient.emergencyPhone;
+            
+            document.getElementById('patientModal').classList.remove('hidden');
+        }
+
+        function deletePatient(id) {
+            const patient = allPatients.find(p => p.id === id);
+            if (!patient) return;
+            
+            if (confirm(`Apakah Anda yakin ingin menghapus data pasien ${patient.fullName}?`)) {
+                allPatients = allPatients.filter(p => p.id !== id);
+                filteredPatients = filteredPatients.filter(p => p.id !== id);
+                updateStats();
+                displayPatients();
+                alert('Data pasien berhasil dihapus');
+            }
+        }
+
+        function viewPatientDetail(id) {
+            const patient = allPatients.find(p => p.id === id);
+            if (!patient) return;
+            
+            const age = new Date().getFullYear() - new Date(patient.birthDate).getFullYear();
+            const detailContent = document.getElementById('patientDetailContent');
+            
+            detailContent.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Personal Info -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="font-bold text-lg text-[#4C7990] mb-4 flex items-center">
+                            <span class="mr-2">👤</span>
+                            Informasi Pribadi
+                        </h3>
+                        <div class="space-y-3">
+                            <div><span class="font-medium">Nama:</span> ${patient.fullName}</div>
+                            <div><span class="font-medium">No. RM:</span> ${patient.medicalRecordNumber}</div>
+                            <div><span class="font-medium">NIK:</span> ${patient.nik}</div>
+                            <div><span class="font-medium">Tanggal Lahir:</span> ${new Date(patient.birthDate).toLocaleDateString('id-ID')} (${age} tahun)</div>
+                            <div><span class="font-medium">Jenis Kelamin:</span> ${patient.gender === 'male' ? 'Laki-laki' : 'Perempuan'}</div>
+                            <div><span class="font-medium">Telepon:</span> ${patient.phone}</div>
+                            <div><span class="font-medium">Email:</span> ${patient.email}</div>
+                            <div><span class="font-medium">Alamat:</span> ${patient.address}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Medical Info -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="font-bold text-lg text-[#4C7990] mb-4 flex items-center">
+                            <span class="mr-2">🏥</span>
+                            Informasi Medis
+                        </h3>
+                        <div class="space-y-3">
+                            <div><span class="font-medium">Golongan Darah:</span> ${patient.bloodType || 'Belum diketahui'}</div>
+                            <div><span class="font-medium">Asuransi:</span> ${patient.insurance.toUpperCase()}</div>
+                            <div><span class="font-medium">Alergi:</span> ${patient.allergies || 'Tidak ada'}</div>
+                            <div><span class="font-medium">Kontak Darurat:</span> ${patient.emergencyContact}</div>
+                            <div><span class="font-medium">Telepon Darurat:</span> ${patient.emergencyPhone}</div>
+                            <div><span class="font-medium">Total Kunjungan:</span> ${patient.visitCount}x</div>
+                            <div><span class="font-medium">Kunjungan Terakhir:</span> ${new Date(patient.lastVisit).toLocaleDateString('id-ID')}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+                    <button onclick="editPatient(${patient.id}); closePatientDetailModal();" 
+                            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all">
+                        ✏️ Edit Data
+                    </button>
+                    <button onclick="printPatientDetail(${patient.id})" 
+                            class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all">
+                        🖨️ Print
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('patientDetailModal').classList.remove('hidden');
+        }
+
+        function closePatientDetailModal() {
+            document.getElementById('patientDetailModal').classList.add('hidden');
+        }
+
+        // Form submission
+        document.getElementById('patientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const patientData = {
+                id: editingPatientId || allPatients.length + 1,
+                medicalRecordNumber: editingPatientId ? allPatients.find(p => p.id === editingPatientId).medicalRecordNumber : `RM${String(allPatients.length + 1).padStart(6, '0')}`,
+                fullName: formData.get('fullName'),
+                nik: formData.get('nik'),
+                birthDate: formData.get('birthDate'),
+                gender: formData.get('gender'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                address: formData.get('address'),
+                bloodType: formData.get('bloodType'),
+                insurance: formData.get('insurance'),
+                allergies: formData.get('allergies'),
+                emergencyContact: formData.get('emergencyContact'),
+                emergencyPhone: formData.get('emergencyPhone'),
+                status: 'waiting',
+                registrationDate: new Date().toISOString(),
+                lastVisit: new Date().toISOString().split('T')[0],
+                visitCount: editingPatientId ? allPatients.find(p => p.id === editingPatientId).visitCount : 1
+            };
+            
+            if (editingPatientId) {
+                // Update existing patient
+                const index = allPatients.findIndex(p => p.id === editingPatientId);
+                allPatients[index] = { ...allPatients[index], ...patientData };
+                alert('Data pasien berhasil diupdate');
+            } else {
+                // Add new patient
+                allPatients.push(patientData);
+                alert('Pasien baru berhasil ditambahkan');
+            }
+            
+            filteredPatients = [...allPatients];
+            updateStats();
+            displayPatients();
+            closePatientModal();
+        });
+
+        // Export and print functions
+        function exportData() {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "No RM,Nama Lengkap,NIK,Tanggal Lahir,Jenis Kelamin,Telepon,Email,Alamat,Golongan Darah,Asuransi,Status\n"
+                + filteredPatients.map(p => 
+                    `${p.medicalRecordNumber},"${p.fullName}",${p.nik},${p.birthDate},${p.gender === 'male' ? 'Laki-laki' : 'Perempuan'},${p.phone},"${p.email}","${p.address}",${p.bloodType},${p.insurance},${p.status}`
+                ).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `data_pasien_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function printPatientList() {
+            window.print();
+        }
+
+        function printPatientDetail(id) {
+            const patient = allPatients.find(p => p.id === id);
+            if (!patient) return;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Detail Pasien - ${patient.fullName}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+                            .info-section { margin-bottom: 30px; }
+                            .info-section h3 { background: #f0f0f0; padding: 10px; margin: 0 0 15px 0; }
+                            .info-row { display: flex; margin-bottom: 10px; }
+                            .info-label { font-weight: bold; width: 150px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>RSU YK Madira</h1>
+                            <h2>Detail Data Pasien</h2>
+                        </div>
+                        
+                        <div class="info-section">
+                            <h3>Informasi Pribadi</h3>
+                            <div class="info-row"><span class="info-label">Nama Lengkap:</span> ${patient.fullName}</div>
+                            <div class="info-row"><span class="info-label">No. RM:</span> ${patient.medicalRecordNumber}</div>
+                            <div class="info-row"><span class="info-label">NIK:</span> ${patient.nik}</div>
+                            <div class="info-row"><span class="info-label">Tanggal Lahir:</span> ${new Date(patient.birthDate).toLocaleDateString('id-ID')}</div>
+                            <div class="info-row"><span class="info-label">Jenis Kelamin:</span> ${patient.gender === 'male' ? 'Laki-laki' : 'Perempuan'}</div>
+                            <div class="info-row"><span class="info-label">Telepon:</span> ${patient.phone}</div>
+                            <div class="info-row"><span class="info-label">Email:</span> ${patient.email}</div>
+                            <div class="info-row"><span class="info-label">Alamat:</span> ${patient.address}</div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <h3>Informasi Medis</h3>
+                            <div class="info-row"><span class="info-label">Golongan Darah:</span> ${patient.bloodType || 'Belum diketahui'}</div>
+                            <div class="info-row"><span class="info-label">Asuransi:</span> ${patient.insurance.toUpperCase()}</div>
+                            <div class="info-row"><span class="info-label">Alergi:</span> ${patient.allergies || 'Tidak ada'}</div>
+                            <div class="info-row"><span class="info-label">Kontak Darurat:</span> ${patient.emergencyContact}</div>
+                            <div class="info-row"><span class="info-label">Telepon Darurat:</span> ${patient.emergencyPhone}</div>
+                            <div class="info-row"><span class="info-label">Total Kunjungan:</span> ${patient.visitCount}x</div>
+                            <div class="info-row"><span class="info-label">Kunjungan Terakhir:</span> ${new Date(patient.lastVisit).toLocaleDateString('id-ID')}</div>
+                        </div>
+                        
+                        <div style="margin-top: 50px; text-align: right; font-size: 12px; color: #666;">
+                            Dicetak pada: ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                localStorage.removeItem('userSession');
+                sessionStorage.removeItem('userSession');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateTime();
+            setInterval(updateDateTime, 60000); // Update every minute
+            
+            initializeData();
+            setupFilters();
+            
+            // Close modals when clicking outside
+            document.getElementById('patientModal').addEventListener('click', function(e) {
+                if (e.target === this) closePatientModal();
+            });
+            
+            document.getElementById('patientDetailModal').addEventListener('click', function(e) {
+                if (e.target === this) closePatientDetailModal();
+            });
+        });
+    </script>
+</body>
+</html>

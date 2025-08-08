@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fasilitas dan Tarif - RSU YK Madira</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(117deg, #FFF 0%, #E3B2D3 49.53%, #55ACBF 99.06%);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Header Navigation -->
+  <header class="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50">
+    <!-- Main Navbar -->
+    <nav class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <img src="img/logo-rsu.png" alt="RSU YK Madira" class="w-16 h-16">
+        </div>
+
+        <!-- Navigation Menu & Login Button -->
+        <div class="flex items-center space-x-8">
+          <!-- Navigation Menu -->
+          <div class="hidden md:flex space-x-8">
+            <a href="dashboard-user.html#beranda" class="text-[#4C7990] hover:text-[#55ACBF] font-medium transition-colors">Beranda</a>
+            <a href="dashboard-user.html#tentang" class="text-[#4C7990] hover:text-[#55ACBF] font-medium transition-colors">Tentang Kami</a>
+            <a href="dashboard-user.html#dokter" class="text-[#4C7990] hover:text-[#55ACBF] font-medium transition-colors">Dokter dan Jadwal Praktek</a>
+            <a href="#" class="text-[#55ACBF] font-semibold transition-colors">Fasilitas dan Tarif</a>
+          </div>
+
+          <!-- Login Button -->
+          <button onclick="window.location.href='login.html'" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full font-medium transition-colors">
+            Login
+          </button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden text-[#4C7990]">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Contact Information Bar -->
+    <div class="bg-[#E3B2D3] py-2">
+      <div class="container mx-auto px-6">
+        <div class="flex justify-center items-center space-x-8 text-sm text-white">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+            </svg>
+            ykmadirayahoo.co.id
+          </span>
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+            </svg>
+            08117300300
+          </span>
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+            </svg>
+            06:00 - 22:00 (Senin-Sabtu)
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-6 py-8">
+    <!-- Page Title -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl md:text-5xl font-bold text-[#4C7990] mb-4">Fasilitas dan Tarif</h1>
+      <p class="text-lg text-gray-600">Layanan kesehatan terpadu dengan tarif yang terjangkau</p>
+    </div>
+
+    <!-- Service Categories -->
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+      <button onclick="showCategory('konsultasi')" id="btn-konsultasi" class="category-btn active bg-[#55ACBF] text-white px-6 py-3 rounded-full font-medium transition-all hover:bg-[#4C7990]">
+        Konsultasi
+      </button>
+      <button onclick="showCategory('radiologi')" id="btn-radiologi" class="category-btn bg-[#E3B2D3] text-[#4C7990] px-6 py-3 rounded-full font-medium transition-all hover:bg-[#55ACBF] hover:text-white">
+        Radiologi
+      </button>
+      <button onclick="showCategory('laborat')" id="btn-laborat" class="category-btn bg-[#E3B2D3] text-[#4C7990] px-6 py-3 rounded-full font-medium transition-all hover:bg-[#55ACBF] hover:text-white">
+        Laborat
+      </button>
+      <button onclick="showCategory('operasi')" id="btn-operasi" class="category-btn bg-[#E3B2D3] text-[#4C7990] px-6 py-3 rounded-full font-medium transition-all hover:bg-[#55ACBF] hover:text-white">
+        Operasi
+      </button>
+      <button onclick="showCategory('kamar')" id="btn-kamar" class="category-btn bg-[#E3B2D3] text-[#4C7990] px-6 py-3 rounded-full font-medium transition-all hover:bg-[#55ACBF] hover:text-white">
+        Kamar
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="max-w-md mx-auto mb-8">
+      <div class="relative">
+        <input type="text" id="searchInput" placeholder="Masukkan kata kunci atau pemeriksaan" 
+               class="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-full focus:border-[#55ACBF] focus:outline-none">
+        <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#55ACBF]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="bg-white/80 backdrop-blur-md rounded-3xl shadow-lg overflow-hidden">
+      
+      <!-- Konsultasi Section -->
+      <div id="konsultasi-section" class="category-section">
+        <div class="bg-[#E3B2D3] p-4">
+          <div class="flex justify-between items-center text-white font-semibold">
+            <span>Nama Konsultasi</span>
+            <span>Unit/Poliklinik</span>
+            <span>Tarif Konsultasi</span>
+          </div>
+        </div>
+        <div class="p-0">
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Umum</span>
+            <span class="text-gray-600">Poliklinik Umum</span>
+            <span class="font-bold text-green-600">Rp 100.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Spesialis Anak</span>
+            <span class="text-gray-600">Poliklinik Anak</span>
+            <span class="font-bold text-green-600">Rp 150.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Spesialis Penyakit Dalam</span>
+            <span class="text-gray-600">Poliklinik Penyakit Dalam</span>
+            <span class="font-bold text-green-600">Rp 160.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Spesialis Kandungan</span>
+            <span class="text-gray-600">Poliklinik Obstetri & Ginekologi</span>
+            <span class="font-bold text-green-600">Rp 170.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Spesialis Gigi</span>
+            <span class="text-gray-600">Poliklinik Gigi</span>
+            <span class="font-bold text-green-600">Rp 130.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Psikolog Klinis</span>
+            <span class="text-gray-600">Unit Psikologi Klinik</span>
+            <span class="font-bold text-green-600">Rp 200.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Gizi</span>
+            <span class="text-gray-600">Unit Gizi</span>
+            <span class="font-bold text-green-600">Rp 90.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Spesialis Saraf</span>
+            <span class="text-gray-600">Poliklinik Saraf</span>
+            <span class="font-bold text-green-600">Rp 180.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Spesialis Kulit</span>
+            <span class="text-gray-600">Poliklinik Kulit & Kelamin</span>
+            <span class="font-bold text-green-600">Rp 140.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Konsultasi Dokter Spesialis Paru</span>
+            <span class="text-gray-600">Poliklinik Paru</span>
+            <span class="font-bold text-green-600">Rp 150.000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Radiologi Section -->
+      <div id="radiologi-section" class="category-section hidden">
+        <div class="bg-[#E3B2D3] p-4">
+          <div class="flex justify-between items-center text-white font-semibold">
+            <span>Nama Pemeriksaan</span>
+            <span>Kelas</span>
+            <span>Tarif Pemeriksaan</span>
+          </div>
+        </div>
+        <div class="p-0">
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Dada (Thorax AP/PA)</span>
+            <span class="text-gray-600">Kelas 1</span>
+            <span class="font-bold text-green-600">Rp 150.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Dada (Thorax AP/PA)</span>
+            <span class="text-gray-600">Kelas 2</span>
+            <span class="font-bold text-green-600">Rp 130.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Dada (Thorax AP/PA)</span>
+            <span class="text-gray-600">Kelas 3</span>
+            <span class="font-bold text-green-600">Rp 110.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">CT Scan Kepala Tanpa Kontras</span>
+            <span class="text-gray-600">Kelas 1</span>
+            <span class="font-bold text-green-600">Rp 800.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">CT Scan Kepala Tanpa Kontras</span>
+            <span class="text-gray-600">Kelas 2</span>
+            <span class="font-bold text-green-600">Rp 700.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">CT Scan Kepala Tanpa Kontras</span>
+            <span class="text-gray-600">Kelas 3</span>
+            <span class="font-bold text-green-600">Rp 600.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">USG Abdomen</span>
+            <span class="text-gray-600">Kelas 1</span>
+            <span class="font-bold text-green-600">Rp 300.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">USG Abdomen</span>
+            <span class="text-gray-600">Kelas 2</span>
+            <span class="font-bold text-green-600">Rp 250.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">USG Abdomen</span>
+            <span class="text-gray-600">Kelas 3</span>
+            <span class="font-bold text-green-600">Rp 200.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">MRI Kepala</span>
+            <span class="text-gray-600">Kelas 1</span>
+            <span class="font-bold text-green-600">Rp 2.500.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">MRI Kepala</span>
+            <span class="text-gray-600">Kelas 2</span>
+            <span class="font-bold text-green-600">Rp 2.200.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">MRI Kepala</span>
+            <span class="text-gray-600">Kelas 3</span>
+            <span class="font-bold text-green-600">Rp 2.000.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Gigi Periapikal</span>
+            <span class="text-gray-600">Kelas 1</span>
+            <span class="font-bold text-green-600">Rp 80.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Gigi Periapikal</span>
+            <span class="text-gray-600">Kelas 2</span>
+            <span class="font-bold text-green-600">Rp 70.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Gigi Periapikal</span>
+            <span class="text-gray-600">Kelas 3</span>
+            <span class="font-bold text-green-600">Rp 60.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Mammografi</span>
+            <span class="text-gray-600">Kelas 1</span>
+            <span class="font-bold text-green-600">Rp 400.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Mammografi</span>
+            <span class="text-gray-600">Kelas 2</span>
+            <span class="font-bold text-green-600">Rp 350.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Mammografi</span>
+            <span class="text-gray-600">Kelas 3</span>
+            <span class="font-bold text-green-600">Rp 300.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Tulang Belakang (Lumbal)</span>
+            <span class="text-gray-600">Kelas 1</span>
+            <span class="font-bold text-green-600">Rp 200.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Tulang Belakang (Lumbal)</span>
+            <span class="text-gray-600">Kelas 2</span>
+            <span class="font-bold text-green-600">Rp 180.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Rontgen Tulang Belakang (Lumbal)</span>
+            <span class="text-gray-600">Kelas 3</span>
+            <span class="font-bold text-green-600">Rp 160.000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Laborat Section -->
+      <div id="laborat-section" class="category-section hidden">
+        <div class="bg-[#E3B2D3] p-4">
+          <div class="flex justify-between items-center text-white font-semibold">
+            <span>Nama Pemeriksaan</span>
+            <span>Kelas</span>
+            <span>Tarif Pemeriksaan</span>
+          </div>
+        </div>
+        <div class="p-0">
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Tropinin T</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 520.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Analisa Cairan</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 350.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Tropinin I</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 450.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">BTA</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 35.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">C E A</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 550.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">P S A Total</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 650.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">IGRA TB</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 700.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">HBSAG Rekanan</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 100.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">Toxoplasma IgG</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 340.000</span>
+          </div>
+          <div class="tarif-item flex justify-between items-center p-4 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">HB ELEKTROFORESA</span>
+            <span class="text-gray-600">-</span>
+            <span class="font-bold text-green-600">Rp 500.000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operasi Section -->
+      <div id="operasi-section" class="category-section hidden">
+        <div class="bg-[#E3B2D3] p-4">
+          <div class="flex justify-between items-center text-white font-semibold">
+            <span>Nama Tindakan</span>
+            <span>Kelas</span>
+            <span>Tarif Operasi</span>
+          </div>
+        </div>
+        <div class="p-0">
+          <div class="tarif-item flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50">
+            <span class="font-medium text-[#4C7990]">TINDAKAN RF VIP</span>
+            <span class="text-gray-600">Kelas VIP</span>
+            <span class="font-bold text-green-600">Rp 22.600.000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kamar Section -->
+      <div id="kamar-section" class="category-section hidden">
+        <div class="bg-[#E3B2D3] p-4">
+          <div class="flex justify-between items-center text-white font-semibold">
+            <span>Nomor Kamar</span>
+            <span>Nama Kamar</span>
+            <span>Kelas</span>
+            <span>Tarif Kamar</span>
+            <span>Status Kamar</span>
+          </div>
+        </div>
+        <div class="p-0 max-h-96 overflow-y-auto">
+          <!-- Kamar data akan digenerate dengan JavaScript -->
+          <div id="kamarList">
+            <!-- Sample data -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center mt-8 space-x-4">
+      <button onclick="window.location.href='booking.html'" class="bg-[#55ACBF] hover:bg-[#4C7990] text-white px-8 py-3 rounded-full font-medium text-lg transition-colors">
+        📅 Pesan Layanan
+      </button>
+      <button onclick="window.print()" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full font-medium text-lg transition-colors">
+        🖨️ Cetak Tarif
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-red-800 to-red-900 text-white py-12 mt-16">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold mb-4" style="font-family: 'Brush Script MT', cursive;">
+          Melayani Sepenuh Hati, Menjadi Andalan Anda
+        </h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <!-- Alamat -->
+        <div>
+          <h3 class="font-bold mb-2">📍 Alamat</h3>
+          <p class="text-sm">
+            Jl. Jend. Sudirman No.1051, 20 Ilir D. I, Kec. Ilir Tim. I, Kota Palembang,<br>
+            Sumatera Selatan 30114
+          </p>
+        </div>
+        
+        <!-- Informasi -->
+        <div>
+          <h3 class="font-bold mb-2">ℹ️ Informasi</h3>
+          <div class="flex justify-center space-x-4">
+            <a href="#" class="hover:text-pink-300">📘</a>
+            <a href="#" class="hover:text-pink-300">📧</a>
+            <a href="#" class="hover:text-pink-300">📞</a>
+          </div>
+        </div>
+        
+        <!-- Jadwal Buka -->
+        <div>
+          <h3 class="font-bold mb-2">🕐 Jadwal Buka</h3>
+          <p class="text-sm">06:00 - 22:00 (Senin-Sabtu)</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Copyright -->
+  <div class="bg-black text-white text-center py-4">
+    <p class="text-sm">Copyright © 2025 RSU YK Madira | All rights reserved.</p>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Category switching functionality
+    function showCategory(category) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.category-section');
+      sections.forEach(section => section.classList.add('hidden'));
+      
+      // Show selected section
+      document.getElementById(category + '-section').classList.remove('hidden');
+      
+      // Update button styles
+      const buttons = document.querySelectorAll('.category-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('active', 'bg-[#55ACBF]', 'text-white');
+        btn.classList.add('bg-[#E3B2D3]', 'text-[#4C7990]');
+      });
+      
+      // Activate selected button
+      const activeBtn = document.getElementById('btn-' + category);
+      activeBtn.classList.add('active', 'bg-[#55ACBF]', 'text-white');
+      activeBtn.classList.remove('bg-[#E3B2D3]', 'text-[#4C7990]');
+    }
+
+    // Generate kamar data
+    function generateKamarData() {
+      const kamarList = document.getElementById('kamarList');
+      const kamarData = [
+        {no: 'K0000158', nama: 'Kamar Elang Emas', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Isi'},
+        {no: 'K1F1', nama: 'Kamar Flaminggo', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Kosong'},
+        {no: 'K0000114', nama: 'Kamar Avocet', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Isi'},
+        {no: 'K0000115', nama: 'Kamar Kakak Tua Raja', kelas: 'Kelas 1', tarif: 'Rp 450.000', status: 'Kosong'},
+        {no: 'K1CB2', nama: 'Kamar Curak Bali', kelas: 'Kelas 1', tarif: 'Rp 450.000', status: 'Kosong'},
+        {no: 'K1CB1', nama: 'Kamar Curak Bali', kelas: 'Kelas 1', tarif: 'Rp 450.000', status: 'Isi'},
+        {no: 'K1C1', nama: 'Kamar Colibri', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Kosong'},
+        {no: 'K1A2', nama: 'Kamar Avocet', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Kosong'},
+        {no: 'K1A1', nama: 'Kamar Avocet', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Kosong'},
+        {no: 'K0000171', nama: 'Kamar Elang Emas', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Isi'},
+        {no: 'K0000125', nama: 'Kamar Parkir', kelas: 'Kelas 1', tarif: 'Rp 200.000', status: 'Kosong'},
+        {no: 'K0000160', nama: 'Kamar Elang Emas', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Kosong'},
+        {no: 'K0000186', nama: 'Kamar Kepodang', kelas: 'Kelas 1', tarif: 'Rp 250.000', status: 'Kosong'},
+        {no: 'K0000163', nama: 'Kamar Astraphia', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Isi'},
+        {no: 'K0000129', nama: 'Kamar Astraphia', kelas: 'Kelas 1', tarif: 'Rp 370.000', status: 'Kosong'}
+      ];
+
+      // Add more kamar data to fill the list (sesuai gambar yang panjang)
+      for (let i = 0; i < 10; i++) {
+        kamarData.push({
+          no: 'KU12123',
+          nama: 'Kamar A',
+          kelas: 'Kelas 1',
+          tarif: 'Rp 123.213',
+          status: 'Kosong'
+        });
+      }
+
+      kamarList.innerHTML = kamarData.map(kamar => `
+        <div class="tarif-item flex justify-between items-center p-3 border-b border-gray-100 hover:bg-gray-50 text-sm">
+          <span class="font-medium text-[#4C7990] w-20">${kamar.no}</span>
+          <span class="text-gray-600 w-32">${kamar.nama}</span>
+          <span class="text-gray-600 w-20">${kamar.kelas}</span>
+          <span class="font-bold text-green-600 w-24">${kamar.tarif}</span>
+          <span class="w-16 ${kamar.status === 'Isi' ? 'text-red-600' : 'text-green-600'}">${kamar.status}</span>
+        </div>
+      `).join('');
+    }
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const items = document.querySelectorAll('.tarif-item');
+      
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      generateKamarData();
+      showCategory('konsultasi'); // Show konsultasi by default
+    });
+
+    // Smooth scroll for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
